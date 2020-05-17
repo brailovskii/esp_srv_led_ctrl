@@ -10,7 +10,7 @@
 
 #define LED_PIN     8
 #define NUM_LEDS    16
-#define LED_FACTORY_BRIGHTNESS_COEF 0.99
+#define LED_FACTORY_BRIGHTNESS_COEF 0.95
 CRGB leds[NUM_LEDS];
 
 
