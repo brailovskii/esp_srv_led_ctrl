@@ -15,7 +15,7 @@ CRGB leds[NUM_LEDS];
 
 
 //SSID and Password to your ESP Access Point
-const char* ssid = "ESPWebServer";
+const char* ssid = "light_ctrl";
 const char* password = "12345678";
 
 ESP8266WebServer server(80); //Server on port 80
