@@ -5,103 +5,91 @@
 #include <ESP8266WiFi.h>
 #include <WiFiClient.h>
 #include <ESP8266WebServer.h>
-#include <FastLED.h>
+#include <DNSServer.h>
+#include <ESP8266mDNS.h>
 
-#include "html_led_ctrl_0001_slider.h"
+
+#include <EEPROM.h>
+
+#include "led_ctrl.h"
+#include "srv_http.h"
+
 #include "config.h"
 
-CRGB leds[NUM_LEDS];
+#include "Timer.h"
+ 
+Timer t;
+
+ 
+
+
+// DNS server
+const byte DNS_PORT = 53;
+DNSServer dnsServer;
+
+/* Soft AP network parameters */
+//IPAddress apIP(192, 168, 4, 1);
+IPAddress apIP(8, 8, 8, 8);
+IPAddress netMsk(255, 255, 255, 0);
+
+/* hostname for mDNS. Should work at least on windows. Try http://esp8266.local */
+const char *myHostname = "esp";
+
+
+
+
+
 
 //SSID and Password to your ESP Access Point
-const char *ssid = "light_ctrl";
-const char *password = "12345678";
+const char *softAP_ssid = "light_ctrl";
+const char *softAP_password = "12345678";
 
-ESP8266WebServer server(80); //Server on port 80
+const char *STA_ssid = "135711131719";
+const char *STA_password = "RAJ56SEL78974ABTR2019";
 
-#define LED 2 //On board LED
 
-//==============================================================
-//     This rutine is exicuted when you open its IP in browser
-//==============================================================
-void handleRoot11()
+
+\
+
+
+
+
+int wifi_sta_conn = 0; 
+
+
+
+void wifi_sta_100ms_cb()
 {
-  server.send(200, "text/plain", "hello from esp8266!");
+  if (WiFi.status() == WL_CONNECTED && wifi_sta_conn == 0) {
+
+    Serial.println("STA connected");
+
+    Serial.print("AP IP: ");
+    Serial.println(WiFi.softAPIP());
+
+    Serial.print("STA IP: ");
+    Serial.println(WiFi.localIP());
+
+    if (!MDNS.begin(myHostname)) {
+      Serial.println("Error setting up MDNS responder!");
+    } else {
+      Serial.println("mDNS responder started");
+      // Add service to MDNS-SD
+      MDNS.addService("http", "tcp", 80);
+    }
+
+    wifi_sta_conn = 1;
+   }
+   else if( WiFi.status() != WL_CONNECTED && wifi_sta_conn == 1 ){
+
+     Serial.println("STA disconnected");
+
+     wifi_sta_conn = 0;
+   }
 }
 
-void handleRoot()
-{
-  String s = MAIN_page;             //Read HTML contents
-  server.send(200, "text/html", s); //Send web page
-}
 
-void handleADC()
-{
-  int a = analogRead(A0);
-  String adcValue = String(a);
 
-  server.send(200, "text/plane", adcValue); //Send ADC value only to client ajax request
-}
-
-void handleLED()
-{
-  String ledState = "OFF";
-  String t_state = server.arg("LEDstate"); //Refer  xhttp.open("GET", "setLED?LEDstate="+led, true);
-  Serial.println(t_state);
-  if (t_state == "1")
-  {
-    digitalWrite(LED, LOW); //LED ON
-    ledState = "ON";        //Feedback parameter
-  }
-  else
-  {
-    digitalWrite(LED, HIGH); //LED OFF
-    ledState = "OFF";        //Feedback parameter
-  }
-
-  server.send(200, "text/plane", ledState); //Send web page
-}
-
-void led_ctrl_0001(int r, int g, int b, int brightness)
-{
-
-  float r_f = r * LED_FACTORY_BRIGHTNESS_COEF * (float)brightness * 255.0 / 10000.0;
-  float g_f = g * LED_FACTORY_BRIGHTNESS_COEF * (float)brightness * 255.0 / 10000.0;
-  float b_f = b * LED_FACTORY_BRIGHTNESS_COEF * (float)brightness * 255.0 / 10000.0;
-
-  r = (int)r_f;
-  g = (int)g_f;
-  b = (int)b_f;
-
-  for (int i = 0; i < NUM_LEDS; i++)
-  {
-    leds[i] = CRGB(r, g, b);
-  }
-
-  FastLED.show();
-}
-
-void handle_led_ctrl_0001(void)
-{
-
-  static int cnt = 0;
-
-  cnt++;
-  String resp = String(cnt) + " ";
-
-  String state_r = server.arg("R");
-  String state_g = server.arg("G");
-  String state_b = server.arg("B");
-  String state_brightness = server.arg("Brightness");
-
-  resp += "R:" + state_r + " ";
-  resp += "S:" + state_g + " ";
-  resp += "T:" + state_b + " ";
-  resp += "Brigntness:" + state_brightness + " ";
-
-  server.send(200, "text/plane", resp); //Send web page
-
-  led_ctrl_0001(state_r.toInt(), state_g.toInt(), state_b.toInt(), state_brightness.toInt());
-}
 
 
 
@@ -113,30 +101,54 @@ void setup(void)
   Serial.begin(115200);
   Serial.println("\nStarting...");
 
-  FastLED.addLeds<WS2812, LED_PIN, GRB>(leds, NUM_LEDS);
+  WiFi.mode(WIFI_AP_STA);     
 
-  WiFi.mode(WIFI_AP);          //Only Access point
-  WiFi.softAP(ssid, password); //Start HOTspot removing password will disable security
+  Serial.println("Configuring access point...");
+  WiFi.softAPConfig(apIP, apIP, netMsk);
+  WiFi.softAP(softAP_ssid, softAP_password);
+  delay(50);
 
-  IPAddress myIP = WiFi.softAPIP(); //Get IP address
-  Serial.print("HotSpt IP:");
-  Serial.println(myIP);
+  Serial.println("Configuring Station mode...");
+  WiFi.begin(STA_ssid, STA_password);
 
-  server.on("/", handleRoot); //Which routine to handle at root location
-  server.on("/setLED", handleLED);
-  server.on("/readADC", handleADC);
 
-  server.on("/led_ctrl_0001", handle_led_ctrl_0001);
+  /* Setup the DNS server redirecting all the domains to the apIP */
+  dnsServer.setErrorReplyCode(DNSReplyCode::NoError);
+  dnsServer.start(DNS_PORT, "*", apIP);
 
-  server.begin(); //Start server
-  Serial.println("HTTP server started");
+
+  /*initialize server*/
+  srv_http_init();
+
+  //initialize leds
+  led_ctrl_init();
+
+  t.every(1000, wifi_sta_100ms_cb);
+  t.every(50, led_ctrl_proces);
 }
+
 //===============================================================
 //                     LOOP
 //===============================================================
 void loop(void)
 {
-  server.handleClient(); //Handle client requests
+
+  t.update();
+
+  if (WiFi.status() == WL_CONNECTED) {
+      //MDNS.update();
+  }
+
+
+
+  //DNS
+  dnsServer.processNextRequest();
+  
+  srv_http_process();
+
+
 }
+
+
 
 

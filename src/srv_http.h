@@ -3,7 +3,8 @@
 
 
 
-void srv_http_led_ctrl_main(void);
+void srv_http_init(void);
 
+void srv_http_process(void);
 
 #endif
