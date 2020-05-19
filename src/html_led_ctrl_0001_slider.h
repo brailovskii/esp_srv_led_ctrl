@@ -52,7 +52,7 @@ const char MAIN_page[] = R"=====(
         setInterval(function () {
             // invoke this function every -n milliseconds
             slider_update_control();
-        }, 100); // interval duration in milliseconds
+        }, 200); // interval duration in milliseconds
 
 
         var gR = -1,
@@ -75,7 +75,7 @@ const char MAIN_page[] = R"=====(
                 state_str += "&B=" + valueB;
                 state_str += "&Brightness=" + valueBrightness;
 
-                document.getElementById("sl_status").innerHTML = state_str;
+                //document.getElementById("sl_status").innerHTML = state_str;
 
                 var xhttp = new XMLHttpRequest();
                 xhttp.onreadystatechange = function () {
