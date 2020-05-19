@@ -1,3 +1,7 @@
+
+
+const char MAIN_page[] = R"=====(
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -90,3 +94,6 @@ function fun_range_onChange(range_id){
 
 </body>
 </html>
+
+
+)=====";

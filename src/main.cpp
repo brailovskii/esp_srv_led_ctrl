@@ -7,6 +7,7 @@
 #include <ESP8266WebServer.h>
 #include <FastLED.h>
 
+#include "html_led_ctrl_0001_slider.h"
 
 #define LED_PIN     8
 #define NUM_LEDS    16
@@ -22,12 +23,7 @@ ESP8266WebServer server(80); //Server on port 80
 
 #define LED 2  //On board LED
 
-const char MAIN_page[] = R"=====(
 
-
-
-
-)=====";
 
 
 
