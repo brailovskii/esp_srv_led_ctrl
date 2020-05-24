@@ -1,12 +1,2 @@
 
 
-
-put these parameters to settings
-    const char *myHostname = "esp";
-    ap ssid
-    ap password
-
-    multilple 0 - 3
-    sta ssid
-    sta password
-    

@@ -41,7 +41,7 @@ int led_ctrl_parse_json_msg_id_0001(const char *json_msg, char *resp, int save_m
   const char *b_str = doc["b"];
   const char *br_str = doc["br"];
 
-  int r, g, b, br;
+  int r=0, g=0, b=0, br=0;
 
   if( r_str!= NULL){
     r = atoi(r_str);
@@ -107,7 +107,7 @@ int led_ctrl_parse_json_msg(const char *json_msg, char *resp){
   }
 
 
-  int res;
+  int res = 0;
   switch(id){
 
     case 1:
@@ -121,7 +121,7 @@ int led_ctrl_parse_json_msg(const char *json_msg, char *resp){
 
   if(need_save){
     //save gloabal parameters
-
+    write_gen_params(&params);
   }
 
   

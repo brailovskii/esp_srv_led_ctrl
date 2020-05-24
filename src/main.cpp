@@ -23,33 +23,14 @@
 
 Timer t;
 
- 
-
 
 // DNS server
 const byte DNS_PORT = 53;
 DNSServer dnsServer;
 
 /* Soft AP network parameters */
-//IPAddress apIP(192, 168, 4, 1);
 IPAddress apIP(8, 8, 8, 8);
 IPAddress netMsk(255, 255, 255, 0);
-
-/* hostname for mDNS. Should work at least on windows. Try http://esp8266.local */
-const char *myHostname = "esp";
-
-
-
-
-
-const char *STA_ssid = "135711131719";
-const char *STA_password = "RAJ56SEL78974ABTR2019";
-
-
-
-\
-
-
 
 
 int wifi_sta_conn = 0; 
@@ -68,7 +49,7 @@ void wifi_sta_100ms_cb()
     Serial.print("STA IP: ");
     Serial.println(WiFi.localIP());
 
-    if (!MDNS.begin(myHostname)) {
+    if (!MDNS.begin(params.host_name)) {
       Serial.println("Error setting up MDNS responder!");
     } else {
       Serial.println("mDNS responder started");
@@ -99,7 +80,7 @@ void setup(void)
   Serial.begin(115200);
   Serial.println("\nStarting...");
 
-
+  /*read settings, if settings are broken set default parameters*/
   params_init();
 
 
@@ -113,13 +94,14 @@ void setup(void)
 
 
   Serial.println("Configuring Station mode...");
-  WiFi.begin(STA_ssid, STA_password);
+  Serial.println(&params.sta_ssid[0][0]);
+  Serial.println(&params.sta_pwd[0][0]);
+  WiFi.begin(&params.sta_ssid[0][0], &params.sta_pwd[0][0]);
 
 
   /* Setup the DNS server redirecting all the domains to the apIP */
   dnsServer.setErrorReplyCode(DNSReplyCode::NoError);
   dnsServer.start(DNS_PORT, "*", apIP);
-
 
   /*initialize server*/
   srv_http_init();
@@ -144,13 +126,10 @@ void loop(void)
   }
 
 
-
   //DNS
   dnsServer.processNextRequest();
   
   srv_http_process();
-
-
 }
 
 
