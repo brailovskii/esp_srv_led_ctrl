@@ -113,19 +113,19 @@ const char MAIN_page[] = R"=====(
 
     <div style="width:100%;">
         <p>Red:</p>
-        <input type="range" min="0" max="255" value="50" id="range_R" class="slider" style="background: #cc0000;"
+        <input type="range" min="0" max="255" value="5555" id="range_R" class="slider" style="background: #cc0000;"
             onchange="slider_update_control(0)">
 
         <p>Green:</p>
-        <input type="range" min="0" max="255" value="50" id="range_G" class="slider" style="background: #00cc00;"
+        <input type="range" min="0" max="255" value="5555" id="range_G" class="slider" style="background: #00cc00;"
             onchange="slider_update_control(0)">
 
         <p>Blue:</p>
-        <input type="range" min="0" max="255" value="50" id="range_B" class="slider" style="background: #0000cc;"
+        <input type="range" min="0" max="255" value="5555" id="range_B" class="slider" style="background: #0000cc;"
             onchange="slider_update_control(0)">
 
         <p>Brightness:</p>
-        <input type="range" min="0" max="255" value="50" id="range_Brightness" class="slider"
+        <input type="range" min="0" max="255" value="5555" id="range_Brightness" class="slider"
             style="background: #cccccc;" onchange="slider_update_control(0)">
 
         <p></p><p></p>

@@ -73,6 +73,11 @@ void write_def_gen_params(struct parameters *ctx){
     sprintf(ctx->ap_ssid, "%s", DEFAULT_AP_SSID);
     sprintf(ctx->ap_pwd,  "%s", DEFAULT_AP_PWD);
 
+    // Serial.println("default sta SSIDs:");
+    // Serial.println(DEFAULT_STA_SSID_1);
+    // Serial.println(DEFAULT_STA_SSID_2);
+    // Serial.println(DEFAULT_STA_SSID_3);
+
     sprintf(&ctx->sta_ssid[0][0], "%s", DEFAULT_STA_SSID_1);
     sprintf(&ctx->sta_pwd[0][0],  "%s", DEFAULT_STA_PWD_1);
     sprintf(&ctx->sta_ssid[1][0], "%s", DEFAULT_STA_SSID_2);
@@ -85,6 +90,11 @@ void write_def_gen_params(struct parameters *ctx){
 
     ctx->led_mode = 0;
     ctx->led_state = 0;
+
+    ctx->led_ctrl_0001.r = 25;
+    ctx->led_ctrl_0001.g = 26;
+    ctx->led_ctrl_0001.b = 36;
+    ctx->led_ctrl_0001.br = 100;
 
     write_gen_params(ctx);
 }
@@ -111,6 +121,8 @@ void params_init(void){
     Serial.print(&params.sta_pwd[2][0]);
     Serial.print("\n.....\n");
 
+    Serial.print("led ctrl mode: ");
+    Serial.println(params.led_mode);
 
 
     Serial.println("Settings CRC is: ");
@@ -123,8 +135,6 @@ void params_init(void){
     Serial.println(clc_crc);
     Serial.println("...");
 
-
-
     if( clc_crc != params.crc ){
 
         Serial.println("\nRestoring to default parameters\n");
@@ -133,6 +143,9 @@ void params_init(void){
     }else{
         Serial.println("Settings have been read");
     }
+
+
+    Serial.println("\nReading settings end\n");
 
 /*
     SPIFFS.begin();

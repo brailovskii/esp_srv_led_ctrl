@@ -6,6 +6,15 @@
 
 
 
+struct params_led_ctrl_0001{
+
+    uint8_t r;
+    uint8_t g;
+    uint8_t b;
+    uint8_t br;
+};
+
+
 struct parameters{
 
     char ap_ssid[32]; // Access point SSID name
@@ -18,6 +27,8 @@ struct parameters{
 
     int led_state;
     int led_mode;
+
+    struct params_led_ctrl_0001 led_ctrl_0001;
 
     /*checksum must be at the end of structure*/
     uint32_t crc;

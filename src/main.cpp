@@ -9,8 +9,6 @@
 #include <ESP8266mDNS.h>
 
 
-
-
 #include "led_ctrl.h"
 #include "srv_http.h"
 

@@ -14,6 +14,4 @@ void led_ctrl_morse_msg(const char * msg);
 void led_ctr_set_all(int r, int g, int b);
 
 
-int led_ctrl_parse_json_msg(const char *json_msg, char *resp);
-
 #endif
