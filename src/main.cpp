@@ -9,7 +9,7 @@
 #include <ESP8266mDNS.h>
 
 
-#include <EEPROM.h>
+
 
 #include "led_ctrl.h"
 #include "srv_http.h"
@@ -18,6 +18,9 @@
 
 #include "Timer.h"
  
+#include "params.h"
+
+
 Timer t;
 
  
@@ -38,11 +41,6 @@ const char *myHostname = "esp";
 
 
 
-
-
-//SSID and Password to your ESP Access Point
-const char *softAP_ssid = "light_ctrl";
-const char *softAP_password = "12345678";
 
 const char *STA_ssid = "135711131719";
 const char *STA_password = "RAJ56SEL78974ABTR2019";
@@ -101,12 +99,18 @@ void setup(void)
   Serial.begin(115200);
   Serial.println("\nStarting...");
 
+
+  params_init();
+
+
   WiFi.mode(WIFI_AP_STA);     
+
 
   Serial.println("Configuring access point...");
   WiFi.softAPConfig(apIP, apIP, netMsk);
-  WiFi.softAP(softAP_ssid, softAP_password);
+  WiFi.softAP(params.ap_ssid, params.ap_pwd);
   delay(50);
+
 
   Serial.println("Configuring Station mode...");
   WiFi.begin(STA_ssid, STA_password);

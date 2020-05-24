@@ -82,21 +82,17 @@ void handle_led_ctrl_0001(void)
   static int cnt = 0;
 
   cnt++;
-  String resp = String(cnt) + " ";
 
-  String state_r = server.arg("R");
-  String state_g = server.arg("G");
-  String state_b = server.arg("B");
-  String state_brightness = server.arg("Brightness");
+  char response[128];
 
-  resp += "R:" + state_r + " ";
-  resp += "S:" + state_g + " ";
-  resp += "T:" + state_b + " ";
-  resp += "Brigntness:" + state_brightness + " ";
+  String msg = server.arg("json_msg");
+  led_ctrl_parse_json_msg(msg.c_str(), response);
+
+  String s(response);
+  String resp = String(cnt) + " " + s;
 
   server.send(200, "text/plane", resp); //Send web page
 
-  led_ctrl_0001(state_r.toInt(), state_g.toInt(), state_b.toInt(), state_brightness.toInt());
 }
 
 

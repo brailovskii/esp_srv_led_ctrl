@@ -1,7 +1,7 @@
 #ifndef _CONFIG_H__
 #define _CONFIG_H__
 
-
+#include "stdint.h"
 
 #define NUM_LEDS    16
 
