@@ -155,13 +155,22 @@ void prc_led_ctrl_0002(void) {
   int refresh_rate = 100;
   int r_step = 1, g_step = 1, b_step = 1;
 
- 
+  r_min = params.led_ctrl_0002.rmin;
+  r_max = params.led_ctrl_0002.rmin;
+  g_min = params.led_ctrl_0002.gmin;
+  g_max = params.led_ctrl_0002.gmax;
+  b_min = params.led_ctrl_0002.bmin;
+  b_max = params.led_ctrl_0002.bmax;
 
-  if( (++cnt%refresh_rate) == 0){
+  refresh_rate = params.led_ctrl_0002.col_upd_rate;
+
+  r_step = params.led_ctrl_0002.rrate;
+  g_step = params.led_ctrl_0002.grate;
+  b_step = params.led_ctrl_0002.brate;
+
+
+  if( (cnt%refresh_rate) == 0){
     //generate new colours
-    // r_goal = rand()%(r_max - r_min) + r_min;
-    // g_goal = rand()%(g_max - g_min) + g_min;
-    // b_goal = rand()%(b_max - b_min) + b_min;
     r_goal = random(r_min, r_max);
     g_goal = random(g_min, g_max);
     b_goal = random(b_min, b_max);
@@ -196,6 +205,8 @@ void prc_led_ctrl_0002(void) {
     // Serial.println(b_goal);
 
   }
+
+  cnt++;
 
   if(r_dir == 1){
     r += r_step;

@@ -68,13 +68,14 @@
             Bmax = document.getElementById("Bmax").value;
 
             Rrate = document.getElementById("Rrate").value;
-            Brate = document.getElementById("Grate").value;
-            Grate = document.getElementById("Brate").value;
+            Grate = document.getElementById("Grate").value;
+            Brate = document.getElementById("Brate").value;
 
             ColUpdRate = document.getElementById("col_upd_rate").value;
 
 
-            if (gRmin != Rmin || gRmax != Rmax || gGmin != Gmin || gGmax != Gmax || gBmin != Bmin || gBmax != Bmax  || gRrate != Rrate || gGrate != Grate || gBrate != Brate  || gColUpdRate != ColUpdRate  || save_me) {
+            if (gRmin != Rmin || gRmax != Rmax || gGmin != Gmin || gGmax != Gmax || gBmin != Bmin || gBmax != Bmax ||
+                gRrate != Rrate || gGrate != Grate || gBrate != Brate || gColUpdRate != ColUpdRate || save_me) {
 
                 var send_str =
                     '{"type":"led_ctrl","id":"2","save":"no","cnt":"0000","rmin":"0000","rmax":"0000","gmin":"0000","gmax":"0000","bmin":"0000","bmax":"0000","rrate":"0000","grate":"0000","brate":"0000","col_upd_rate":"0000"}';
@@ -96,7 +97,7 @@
                 send_str = send_str.replace('"brate":"0000"', '"brate":"' + Brate + '"');
 
                 send_str = send_str.replace('"col_upd_rate":"0000"', '"col_upd_rate":"' + ColUpdRate + '"');
-                
+
 
                 document.getElementById("sl_status").innerHTML = send_str;
 
@@ -134,55 +135,163 @@
     <h1>Colour Randomizer! :)</h1>
 
     <div style="width:100%;">
-        <p>Colour change Rate</p>
-        <input type="range" min="0" max="255" value="5555" id="col_upd_rate" class="slider" style="background: #5b255d;"
-            onchange="slider_update_control(0)">
-
-        <p>Red max:</p>
-        <input type="range" min="0" max="255" value="5555" id="Rmax" class="slider" style="background: #fa0303;"
-            onchange="slider_update_control(0)">
-
-        <p>Red min:</p>
-        <input type="range" min="0" max="255" value="5555" id="Rmin" class="slider" style="background: #fa0303;"
-            onchange="slider_update_control(0)">
-
-        <p>Green max:</p>
-        <input type="range" min="0" max="255" value="5555" id="Gmax" class="slider" style="background: #03f810;"
-            onchange="slider_update_control(0)">
-
-        <p>Green min:</p>
-        <input type="range" min="0" max="255" value="5555" id="Gmin" class="slider" style="background: #03f810;"
-            onchange="slider_update_control(0)">
-
-        <p>Blue max:</p>
-        <input type="range" min="0" max="255" value="5555" id="Bmax" class="slider" style="background: #0023ec;"
-            onchange="slider_update_control(0)">
-
-        <p>Blue min:</p>
-        <input type="range" min="0" max="255" value="5555" id="Bmin" class="slider" style="background: #0023ec;"
-            onchange="slider_update_control(0)">
 
 
-        <p></p>
-        <p></p>
 
-        <p>Red update rate:</p>
-        <input type="range" min="0" max="255" value="5555" id="Rrate" class="slider" style="background: #fa4e4e;"
-            onchange="slider_update_control(0)">
-        <p>Green update rate:</p>
-        <input type="range" min="0" max="255" value="5555" id="Grate" class="slider" style="background: #54fa4e;"
-            onchange="slider_update_control(0)">
-        <p>Blue update rate:</p>
-        <input type="range" min="0" max="255" value="5555" id="Brate" class="slider" style="background: #764efa;"
-            onchange="slider_update_control(0)">
+        <table style="width: 100%;">
 
-        <input type="button" id="save_btn"
-            style="margin-left:25%; width:50%;height:50px; background-color: #4CAF50;border-color:burlywood;"
-            value="Save" onclick="slider_update_control(1)">
 
-        <p></p>
-        <h5 id="response_text"> Response </h5>
-        <h5 id="sl_status"> None </h5>
+            <tr>
+                <td>
+                    Colour change Rate
+                </td>
+                <td colspan="2">
+                    <input type="range" min="0" max="200" value="5555" id="col_upd_rate" class="slider"
+                        style="background: #5b255d;" onchange="slider_update_control(0)">
+                </td>
+            </tr>
+
+            <tr>
+                <td colspan="3">
+                    <h3></h3>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="3">
+                    <h3></h3>
+                </td>
+            </tr>
+
+            <tr>
+                <td>
+                    Red min/max
+                </td>
+                <td>
+                    <input type="range" min="0" max="255" value="5555" id="Rmin" class="slider"
+                        style="background: #fa0303;" onchange="slider_update_control(0)">
+                </td>
+                <td>
+                    <input type="range" min="0" max="255" value="5555" id="Rmax" class="slider"
+                        style="background: #fa0303;" onchange="slider_update_control(0)">
+                </td>
+            </tr>
+
+            <tr>
+                <td colspan="3">
+                    <h3></h3>
+                </td>
+            </tr>
+
+            <tr>
+                <td>
+                    Green min/max
+                </td>
+                <td>
+                    <input type="range" min="0" max="255" value="5555" id="Gmin" class="slider"
+                        style="background: #03f810;" onchange="slider_update_control(0)">
+                </td>
+                <td>
+                    <input type="range" min="0" max="255" value="5555" id="Gmax" class="slider"
+                        style="background: #03f810;" onchange="slider_update_control(0)">
+                </td>
+            </tr>
+
+            <tr>
+                <td colspan="3">
+                    <h3></h3>
+                </td>
+            </tr>
+
+            <tr>
+                <td>
+                    Blue min/max
+                </td>
+                <td>
+                    <input type="range" min="0" max="255" value="5555" id="Bmin" class="slider"
+                        style="background: #0023ec;" onchange="slider_update_control(0)">
+                </td>
+                <td>
+                    <input type="range" min="0" max="255" value="5555" id="Bmax" class="slider"
+                        style="background: #0023ec;" onchange="slider_update_control(0)">
+                </td>
+            </tr>
+
+
+            <tr>
+                <td colspan="3">
+                    <h3></h3>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="3">
+                    <h3></h3>
+                </td>
+            </tr>
+
+            <tr>
+                <td>
+                    Red update rate:
+                </td>
+                <td colspan="2">
+
+                    <input type="range" min="1" max="20" value="5555" id="Rrate" class="slider"
+                        style="background: #fa4e4e;" onchange="slider_update_control(0)">
+                </td>
+            </tr>
+
+            <tr>
+                <td colspan="3">
+                    <h3></h3>
+                </td>
+            </tr>
+
+            <tr>
+                <td>
+                    Green update rate:
+                </td>
+                <td colspan="2">
+                    <input type="range" min="1" max="20" value="5555" id="Grate" class="slider"
+                        style="background: #54fa4e;" onchange="slider_update_control(0)">
+                </td>
+            </tr>
+
+            <tr>
+                <td colspan="3">
+                    <h3></h3>
+                </td>
+            </tr>
+
+            <tr>
+                <td>
+                    Blue update rate:
+                </td>
+                <td colspan="2">
+                    <input type="range" min="1" max="20" value="5555" id="Brate" class="slider"
+                        style="background: #764efa;" onchange="slider_update_control(0)">
+                </td>
+            </tr>
+
+        </table>
+
+
+
+
+
+        <div style="width:100%; word-wrap: break-word;">
+            <p></p>
+            <input type="button" id="save_btn"
+                style="margin-left:0%; width:20%;height:50px; background-color: #4CAF50;border-color:burlywood;"
+                value="Save" onclick="slider_update_control(1)">
+            <p></p>
+            <button
+                style="margin-left:0%; width:20%;height:50px; background-color: rgb(40, 78, 41);border-color:burlywood;"
+                onclick="window.location.href = '/';"> Main Page </button>
+            <p></p>
+            <h5 id="response_text" style="word-wrap: break-word;"> Response </h5>
+            <h5 id="sl_status" style="word-wrap: break-word;"> None </h5>
+        </div>
+
+
     </div>
 
 </body>

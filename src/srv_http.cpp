@@ -117,18 +117,30 @@ void handle_html_led_ctrl_0002(void){
 
   String s = html_page_led_ctrl_0002;             //Read HTML contents
 
-  // String r(params.led_ctrl_0001.r);
-  // String g(params.led_ctrl_0001.g);
-  // String b(params.led_ctrl_0001.b);
-  // String br(params.led_ctrl_0001.br);
-  // s.replace("value=\"5555\" id=\"range_R\"", "value=\"" + r + "\" id=\"range_R\"");
-  // s.replace("value=\"5555\" id=\"range_G\"", "value=\"" + g + "\" id=\"range_G\"");
-  // s.replace("value=\"5555\" id=\"range_B\"", "value=\"" + b + "\" id=\"range_B\"");
-  // s.replace("value=\"5555\" id=\"range_Brightness\"", "value=\"" + br + "\" id=\"range_Brightness\"");
+  String rmin(params.led_ctrl_0002.rmin);
+  String rmax(params.led_ctrl_0002.rmax);
+  String gmin(params.led_ctrl_0002.gmin);
+  String gmax(params.led_ctrl_0002.gmax);
+  String bmin(params.led_ctrl_0002.bmin);
+  String bmax(params.led_ctrl_0002.bmax);
+  String rrate(params.led_ctrl_0002.rrate);
+  String grate(params.led_ctrl_0002.grate);
+  String brate(params.led_ctrl_0002.brate);
+  String col_upd_rate(params.led_ctrl_0002.col_upd_rate);
 
+
+ s.replace("value=\"5555\" id=\"Rmin\"", "value=\"" + rmin + "\" id=\"Rmin\"");
+ s.replace("value=\"5555\" id=\"Rmax\"", "value=\"" + rmax + "\" id=\"Rmax\"");
+ s.replace("value=\"5555\" id=\"Gmin\"", "value=\"" + gmin + "\" id=\"Gmin\"");
+ s.replace("value=\"5555\" id=\"Gmax\"", "value=\"" + gmax + "\" id=\"Gmax\"");
+ s.replace("value=\"5555\" id=\"Bmin\"", "value=\"" + bmin + "\" id=\"Bmin\"");
+ s.replace("value=\"5555\" id=\"Bmax\"", "value=\"" + bmax + "\" id=\"Bmax\"");
+ s.replace("value=\"5555\" id=\"Rrate\"", "value=\"" + rrate + "\" id=\"Rrate\"");
+ s.replace("value=\"5555\" id=\"Grate\"", "value=\"" + grate + "\" id=\"Grate\"");
+ s.replace("value=\"5555\" id=\"Brate\"", "value=\"" + brate + "\" id=\"Brate\"");
+ s.replace("value=\"5555\" id=\"col_upd_rate\"", "value=\"" + col_upd_rate + "\" id=\"col_upd_rate\"");
 
   server.send(200, "text/html", s); //Send web page
-
 }
 
 void handle_led_ctrl_0001(void)

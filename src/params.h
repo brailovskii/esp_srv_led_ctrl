@@ -14,6 +14,22 @@ struct params_led_ctrl_0001{
     uint8_t br;
 };
 
+struct params_led_ctrl_0002{
+
+    uint8_t rmin;
+    uint8_t rmax;
+    uint8_t gmin;
+    uint8_t gmax;
+    uint8_t bmin;
+    uint8_t bmax;
+
+    uint8_t rrate;
+    uint8_t grate;
+    uint8_t brate;
+
+    uint16_t col_upd_rate;
+};
+
 
 struct parameters{
 
@@ -28,6 +44,7 @@ struct parameters{
     int led_mode;
 
     struct params_led_ctrl_0001 led_ctrl_0001;
+    struct params_led_ctrl_0002 led_ctrl_0002;
 
     /*checksum must be at the end of structure*/
     uint32_t crc;

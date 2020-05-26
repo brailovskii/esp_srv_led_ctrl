@@ -12,8 +12,6 @@ const char html_page_led_ctrl_0001[] = R"=====(
 
 
 
-
-    
 <!DOCTYPE html>
 <html>
 
@@ -54,7 +52,6 @@ const char html_page_led_ctrl_0001[] = R"=====(
     </style>
 
     <script>
-
         setInterval(function () {
             // invoke this function every -n milliseconds
             slider_update_control(0);
@@ -76,28 +73,29 @@ const char html_page_led_ctrl_0001[] = R"=====(
             valueB = document.getElementById("range_B").value;
             valueBrightness = document.getElementById("range_Brightness").value;
 
-            if(save_me == 1){
+            if (save_me == 1) {
 
             }
 
 
             if (valueR != gR || valueG != gG || valueB != gB || valueBrightness != gBr || save_me) {
-                
-                var send_str = '{"type":"led_ctrl","id":"1","save":"no","cnt":"0000","r":"0000","g":"0000","b":"0000","br":"0000"}';
 
-                if(save_me){
+                var send_str =
+                    '{"type":"led_ctrl","id":"1","save":"no","cnt":"0000","r":"0000","g":"0000","b":"0000","br":"0000"}';
+
+                if (save_me) {
                     send_str = send_str.replace('"save":"no"', '"save":"yes"');
                 }
                 send_str = send_str.replace('"cnt":"0000"', '"cnt":"' + g_cnt + '"');
-                send_str = send_str.replace('"r":"0000"', '"r":"' +  valueR + '"');
-                send_str = send_str.replace('"g":"0000"', '"g":"' +  valueG + '"');
-                send_str = send_str.replace('"b":"0000"', '"b":"' +  valueB + '"');
-                send_str = send_str.replace('"br":"0000"', '"br":"' +  valueBrightness + '"');
+                send_str = send_str.replace('"r":"0000"', '"r":"' + valueR + '"');
+                send_str = send_str.replace('"g":"0000"', '"g":"' + valueG + '"');
+                send_str = send_str.replace('"b":"0000"', '"b":"' + valueB + '"');
+                send_str = send_str.replace('"br":"0000"', '"br":"' + valueBrightness + '"');
 
                 document.getElementById("sl_status").innerHTML = send_str;
 
                 g_cnt = g_cnt + 1;
-                
+
                 var xhttp = new XMLHttpRequest();
                 xhttp.onreadystatechange = function () {
                     if (this.readyState == 4 && this.status == 200) {
@@ -107,7 +105,7 @@ const char html_page_led_ctrl_0001[] = R"=====(
                 };
                 xhttp.open("GET", "led_ctrl_0001?json_msg=" + send_str, true);
                 xhttp.send();
-                
+
             }
 
             gR = valueR;
@@ -116,7 +114,6 @@ const char html_page_led_ctrl_0001[] = R"=====(
             gBr = valueBrightness;
 
         }
-
     </script>
 </head>
 
@@ -141,20 +138,33 @@ const char html_page_led_ctrl_0001[] = R"=====(
         <input type="range" min="0" max="255" value="5555" id="range_Brightness" class="slider"
             style="background: #cccccc;" onchange="slider_update_control(0)">
 
-        <p></p><p></p>
-
-        <input type="button" id="save_btn" style="margin-left:25%; width:50%;height:50px; background-color: #4CAF50;border-color:burlywood;" value="Save" onclick="slider_update_control(1)">
-
         <p></p>
-        <h5 id="response_text"> Response </h5>
-        <h5 id="sl_status"> None </h5>
+        <p></p>
+
+
+
+
+        <div style="width:100%; word-wrap: break-word;">
+
+            <p></p>
+            <input type="button" id="save_btn"
+                style="margin-left:0%; width:20%;height:50px; background-color: #4CAF50;border-color:burlywood;"
+                value="Save" onclick="slider_update_control(1)">
+            <p></p>
+            <button
+                style="margin-left:0%; width:20%;height:50px; background-color: rgb(40, 78, 41);border-color:burlywood;"
+                onclick="window.location.href = '/';"> Main Page </button>
+            <p></p>
+            <h5 id="response_text" style="word-wrap: break-word;"> Response </h5>
+            <h5 id="sl_status" style="word-wrap: break-word;"> None </h5>
+        </div>
+
+
     </div>
 
 </body>
 
 </html>
-
-
 
 
 

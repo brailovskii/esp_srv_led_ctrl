@@ -95,6 +95,18 @@ void write_def_gen_params(struct parameters *ctx){
     ctx->led_ctrl_0001.b = 36;
     ctx->led_ctrl_0001.br = 100;
 
+
+    ctx->led_ctrl_0002.rmin = 0;
+    ctx->led_ctrl_0002.rmax = 255;
+    ctx->led_ctrl_0002.gmin = 0;
+    ctx->led_ctrl_0002.gmax = 255;
+    ctx->led_ctrl_0002.bmin = 0;
+    ctx->led_ctrl_0002.bmax = 255;
+    ctx->led_ctrl_0002.rrate = 5;
+    ctx->led_ctrl_0002.grate = 5;
+    ctx->led_ctrl_0002.brate = 5;
+    ctx->led_ctrl_0002.col_upd_rate = 15;
+
     write_gen_params(ctx);
 }
 
