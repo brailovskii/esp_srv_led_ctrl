@@ -9,7 +9,7 @@
 
 #define LED_PIN     8
 
-#define LED_FACTORY_BRIGHTNESS_COEF 1.0
+#define LED_FACTORY_BRIGHTNESS_COEF 0.99999
 
 
 #define DEFAULT_AP_SSID "lightning"
