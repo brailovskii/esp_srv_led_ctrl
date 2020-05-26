@@ -1,6 +1,19 @@
+#ifndef _HTML_LED_CTRL_0001_H_
+#define _HTML_LED_CTRL_0001_H_
 
 
-const char MAIN_page[] = R"=====(
+
+
+const char html_page_led_ctrl_0001[] = R"=====(
+
+
+
+
+
+
+
+
+    
 <!DOCTYPE html>
 <html>
 
@@ -143,4 +156,24 @@ const char MAIN_page[] = R"=====(
 
 
 
+
+
+
+
+
+
 )=====";
+
+
+
+
+
+
+
+
+
+
+
+
+
+#endif

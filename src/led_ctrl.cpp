@@ -6,6 +6,7 @@
 
 void prc_led_ctrl_0000(void);
 void prc_led_ctrl_0001(void);
+void prc_led_ctrl_0002(void);
 
 CRGB leds[NUM_LEDS];
 uint8_t leds_buf[3][NUM_LEDS];
@@ -13,6 +14,8 @@ uint8_t leds_buf[3][NUM_LEDS];
 void led_ctrl_init(void) {
   memset(leds_buf, 0, sizeof(leds_buf));
   FastLED.addLeds<WS2812, LED_PIN, GRB>(leds, NUM_LEDS);
+
+   randomSeed(analogRead(0));
 }
 
 void led_ctrl_proces(void) {
@@ -25,6 +28,9 @@ void led_ctrl_proces(void) {
   case 1:
       prc_led_ctrl_0001();
       break;
+  case 2:
+      prc_led_ctrl_0002();
+      break;      
   default:
     break;
   }
@@ -114,6 +120,15 @@ void prc_led_ctrl_0000(void) {
 
 void prc_led_ctrl_0001(void) {
 
+  static int cnt = 0;
+
+  cnt++;
+
+  //function is called periodically, so we dont have to update it every time
+  if( (cnt%2) != 0 ){
+    return;
+  }
+
   int r,g,b;
 
   r = (params.led_ctrl_0001.r * params.led_ctrl_0001.br) / 255;
@@ -122,7 +137,113 @@ void prc_led_ctrl_0001(void) {
 
   led_ctr_set_all(r,g,b);
 
+  led_ctrl_update();
+
 }
+
+
+void prc_led_ctrl_0002(void) {
+
+  //this function creates random colour
+  static int cnt = 0;
+  static int16_t r = 0,g = 0,b = 0; //must be more that 8bit
+  static int r_goal = 0, g_goal = 0, b_goal = 0;
+  static int r_dir = 1, g_dir = 1, b_dir = 1;
+
+  uint8_t r_max = 255, g_max = 255, b_max = 255;
+  uint8_t r_min = 0, g_min = 0, b_min = 0;
+  int refresh_rate = 100;
+  int r_step = 1, g_step = 1, b_step = 1;
+
+ 
+
+  if( (++cnt%refresh_rate) == 0){
+    //generate new colours
+    // r_goal = rand()%(r_max - r_min) + r_min;
+    // g_goal = rand()%(g_max - g_min) + g_min;
+    // b_goal = rand()%(b_max - b_min) + b_min;
+    r_goal = random(r_min, r_max);
+    g_goal = random(g_min, g_max);
+    b_goal = random(b_min, b_max);
+
+    if(r_goal > r){
+      r_dir = 1;
+    }else if(r_goal < r){
+      r_dir = -1;
+    }else{
+      r_dir = 0;
+    }
+
+    if( g_goal > g){
+      g_dir = 1;
+    }else if( g_goal < g ){
+      g_dir = -1;
+    }else{
+      g_dir = 0;
+    }
+
+    if(b_goal > b){
+      b_dir = 1;
+    }else if(b_goal< b){
+      b_dir = -1;
+    }else{
+      b_dir = 0;
+    }
+
+    // Serial.println("\nNew goal values: ");
+    // Serial.println(r_goal);
+    // Serial.println(g_goal);
+    // Serial.println(b_goal);
+
+  }
+
+  if(r_dir == 1){
+    r += r_step;
+    if( r > r_goal){
+      r = r_goal;
+    }
+  }else if(r_dir == -1){
+    r -= r_step;
+    if( r < r_goal ){
+      r = r_goal;
+    }
+  }
+
+  if(g_dir == 1){
+    g += g_step;
+    if( g > g_goal){
+      g = g_goal;
+    }
+  }else if(g_dir == -1){
+    g -= g_step;
+    if( g < g_goal ){
+      g = g_goal;
+    }
+  }
+
+    if(b_dir == 1){
+    b += b_step;
+    if( b > b_goal){
+      b = b_goal;
+    }
+  }else if(b_dir == -1){
+    b -= b_step;
+    if( b < b_goal ){
+      b = b_goal;
+    }
+  }
+
+    // Serial.println("\nRGB values: ");
+    // Serial.println(r);
+    // Serial.println(g);
+    // Serial.println(b);
+
+  led_ctr_set_all(r,g,b);
+
+  led_ctrl_update();
+
+}
+
 
 
 void led_ctr_set_all(int r, int g, int b) {
@@ -133,7 +254,6 @@ void led_ctr_set_all(int r, int g, int b) {
     leds_buf[2][i] = b;
   }
 
-  led_ctrl_update();
 }
 
 void led_ctrl_0001(int r, int g, int b) {

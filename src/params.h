@@ -2,7 +2,7 @@
 #define SETTINGS_H__
 
 #include "config.h"
-
+#include "stdlib.h"
 
 
 
@@ -25,7 +25,6 @@ struct parameters{
 
     char host_name[32];
 
-    int led_state;
     int led_mode;
 
     struct params_led_ctrl_0001 led_ctrl_0001;

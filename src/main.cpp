@@ -108,7 +108,7 @@ void setup(void)
   led_ctrl_init();
 
   t.every(1000, wifi_sta_100ms_cb);
-  t.every(50, led_ctrl_proces);
+  t.every(LED_CTRL_CALL_PERIOD, led_ctrl_proces);
 }
 
 //===============================================================

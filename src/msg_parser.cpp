@@ -57,13 +57,7 @@ int led_ctrl_parse_json_msg_id_0001(const char *json_msg, char *resp){
   params.led_ctrl_0001.b = b;
   params.led_ctrl_0001.br = br;
 
-  // r = (r*br)/255;
-  // g = (g*br)/255;
-  // b = (b*br)/255;
-
-  // led_ctrl_0001(r,g,b);
-
-  sprintf(resp, " r: %d g: %d b: %d br: %d ", r,g,b,br);
+  sprintf(resp, "! r: %d g: %d b: %d br: %d ", r,g,b,br);
 
   return 0;
 }
@@ -74,7 +68,7 @@ int msg_parser_parse(const char *json_msg, char *resp){
   *resp = 0;
   int need_save = 0;
 
-  StaticJsonDocument<200> doc;
+  StaticJsonDocument<400> doc;
   DeserializationError error = deserializeJson(doc, json_msg); // Deserialize the JSON document
 
   // Test if parsing succeeds.

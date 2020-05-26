@@ -5,6 +5,7 @@
 
 #define NUM_LEDS    16
 
+#define LED_CTRL_CALL_PERIOD 50
 
 #define LED_PIN     8
 
