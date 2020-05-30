@@ -82,7 +82,6 @@ void handleRoot()
 
 void handle_settings(void){
 
-
   server.send(200, "text/html", "Here will be settings"); //Send web page
 }
 
@@ -90,6 +89,9 @@ void handle_colour_ctrl_list(void){
 
 
   String s = html_page_colour_ctrl_list;
+
+  Serial.println("Color control list html page requested...");
+  Serial.println(s);
 
   server.send(200, "text/html", s); //Send web page
 

@@ -7,7 +7,7 @@
 
 #define LED_CTRL_CALL_PERIOD 50
 
-#define LED_PIN     8
+#define LED_PIN     1
 
 #define LED_FACTORY_BRIGHTNESS_COEF 0.99999
 
