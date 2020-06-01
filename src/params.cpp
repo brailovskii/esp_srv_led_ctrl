@@ -107,6 +107,14 @@ void write_def_gen_params(struct parameters *ctx){
     ctx->led_ctrl_0002.brate = 5;
     ctx->led_ctrl_0002.col_upd_rate = 15;
 
+
+    ctx->led_ctrl_0007.r = 200;
+    ctx->led_ctrl_0007.g = 200;
+    ctx->led_ctrl_0007.b = 200;
+    ctx->led_ctrl_0007.puase_btw_msg = 3000;
+    strcpy(ctx->led_ctrl_0007.msg, "I love you");
+
+
     write_gen_params(ctx);
 }
 

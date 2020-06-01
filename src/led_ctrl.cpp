@@ -2,14 +2,37 @@
 #include "params.h"
 #include <FastLED.h>
 
+typedef enum
+{
+  MORSE_STATE_NONE,
+  MORSE_STATE_DOT,
+  MORSE_STATE_DOT_ON,
+  MORSE_STATE_DOT_OFF,
+  MORSE_STATE_DASH,
+  MORSE_STATE_DASH_ON,
+  MORSE_STATE_DASH_OFF,
+
+  MORSE_STATE_SHORT_SPACE,
+  MORSE_STATE_LONG_SPACE,
+
+  MORSE_STATE_TRANSMITTING,
+
+  MORSE_STATE_LETTER_DONE,
+  MORSE_STATE_MSG_DONE
+} morse_states;
+
 void prc_led_ctrl_0000(void);
 void prc_led_ctrl_0001(void);
 void prc_led_ctrl_0002(void);
+void prc_led_ctrl_0003(void);
 void prc_led_ctrl_0007(void);
+
+int led_ctrl_morse_char(char input);
 
 CRGB leds[NUM_LEDS];
 uint8_t leds_buf[3][NUM_LEDS];
-static uint8_t morse_rgb[3];
+static uint8_t morse_rgb[3] = { 255, 0, 0};
+static uint8_t morse_state = MORSE_STATE_NONE;
 
 void led_ctrl_init(void)
 {
@@ -34,6 +57,9 @@ void led_ctrl_proces(void)
     break;
   case 2:
     prc_led_ctrl_0002();
+    break;
+  case 3:
+    prc_led_ctrl_0003();
     break;
   case 7:
     prc_led_ctrl_0007();
@@ -128,8 +154,6 @@ void prc_led_ctrl_0000(void)
 
   led_ctrl_update();
 }
-
-
 
 void prc_led_ctrl_0001(void)
 {
@@ -297,10 +321,75 @@ void prc_led_ctrl_0002(void)
   led_ctrl_update();
 }
 
+void prc_led_ctrl_0003(void)
+{
 
+  led_ctrl_update();
+}
 
+/*morse code flashing*/
 void prc_led_ctrl_0007(void)
 {
+
+  static int i = 0;
+  static int morse_msg_state = MORSE_STATE_NONE;
+  static uint32_t wait_start_time = 0;
+
+  char *msg = params.led_ctrl_0007.msg;
+  morse_rgb[0] = params.led_ctrl_0007.r;
+  morse_rgb[1] = params.led_ctrl_0007.g;
+  morse_rgb[2] = params.led_ctrl_0007.b;
+  uint32_t wait_time_ms = params.led_ctrl_0007.puase_btw_msg;
+
+
+  if (morse_msg_state == MORSE_STATE_NONE)
+  {
+    //start transmitting
+    i = 0;
+    morse_msg_state = MORSE_STATE_TRANSMITTING;
+    Serial.println("Msg:");
+    Serial.println(msg);
+  }
+
+  if( morse_msg_state == MORSE_STATE_TRANSMITTING ){
+
+    if( msg[i] == 0 ){
+      morse_msg_state = MORSE_STATE_MSG_DONE;
+    }else{
+      if( led_ctrl_morse_char(msg[i]) == 1 ){
+        //letter has been transmitted
+        i++;
+
+        Serial.println("next letter:");
+        Serial.println(msg[i]);
+        Serial.println(msg[i], DEC);
+      }
+    }
+  }
+
+
+  if (morse_msg_state == MORSE_STATE_MSG_DONE)
+  {
+    Serial.println("message transmitted\n\n");
+
+    if( wait_start_time == 0 ){
+      wait_start_time = millis();
+    }else{
+
+      if( ( millis() - wait_start_time) > wait_time_ms ){
+        morse_msg_state = MORSE_STATE_NONE;
+        wait_start_time = 0;
+      }
+
+    }
+
+
+    
+
+
+  }
+
+  led_ctrl_update();
 }
 
 void led_ctr_set_all(int r, int g, int b)
@@ -325,466 +414,271 @@ void led_ctrl_0001(int r, int g, int b)
 
 
 
-
-
-
-
-
-
-void space()
+int dot()
 {
-  delay(1200);
-} // space between words
+  static uint32_t on_start_time = 0;
+  static uint32_t off_start_time = 0;
+  static int dot_state = MORSE_STATE_NONE;
 
-void dot()
-{
-  led_ctr_set_all(morse_rgb[0], morse_rgb[1], morse_rgb[2]);
-  delay(300);
-  led_ctr_set_all(0, 0, 0);
-  delay(300);
+  if (morse_state != MORSE_STATE_DOT)
+  {
+    return 0;
+  }
+
+
+  if( dot_state == MORSE_STATE_NONE ){
+    dot_state = MORSE_STATE_DOT_ON;
+    led_ctr_set_all(morse_rgb[0], morse_rgb[1], morse_rgb[2]);
+    on_start_time = millis(); //get start time
+  }
+
+
+  if (dot_state == MORSE_STATE_DOT_ON)
+  {
+    if ((millis() - on_start_time) < 300){
+      return 0;
+    }
+    else{
+      dot_state = MORSE_STATE_DOT_OFF;
+      led_ctr_set_all(0, 0, 0); //turn off light
+      off_start_time = millis();
+    }
+  }
+
+  if (dot_state == MORSE_STATE_DOT_OFF)
+  {
+
+    if ((millis() - off_start_time) < 300)
+    {
+      return 0;
+    }
+    else
+    {
+      off_start_time = 0;
+      on_start_time = 0;
+      dot_state = MORSE_STATE_NONE;
+      return 1;
+    }
+  }
+
+  return 0;
 } // the dot this code make the led on for 300 than off for 300
 
-void dash()
+int dash()
 {
-  led_ctr_set_all(morse_rgb[0], morse_rgb[1], morse_rgb[2]);
-  delay(900);
-  led_ctr_set_all(0, 0, 0);
-  delay(300);
+
+  static uint32_t on_start_time;
+  static uint32_t off_start_time;
+  static int dash_state = MORSE_STATE_NONE;
+
+  if (morse_state != MORSE_STATE_DASH)
+  {
+    return 0;
+  }
+
+  if(dash_state == MORSE_STATE_NONE){
+
+    dash_state = MORSE_STATE_DASH_ON;
+    led_ctr_set_all(morse_rgb[0], morse_rgb[1], morse_rgb[2]);
+    on_start_time = millis(); //get start time
+  }
+
+  if (dash_state == MORSE_STATE_DASH_ON)
+  {
+    if ((millis() - on_start_time) < 900)
+    {
+      return 0;
+    }
+
+          led_ctr_set_all(0, 0, 0); //turn off light
+      off_start_time = millis();
+      dash_state = MORSE_STATE_DASH_OFF;
+
+  }
+
+  if (dash_state == MORSE_STATE_DASH_OFF){
+
+
+    if ((millis() - off_start_time) < 300)
+    {
+      return 0;
+    }
+    else
+    {
+      off_start_time = 0;
+      on_start_time = 0;
+      dash_state = MORSE_STATE_NONE;
+      return 1;
+    }
+  }
+
+  return 0;
 } // the dash this code make the led on for 900 than off for 300
 
-void shortspace() { delay(600); } // space between letters
-
-// fonctions for the letters and the numbers
-void lA()
-{
-  dot();
-  dash();
-  shortspace();
-} // letter A in morse code!
-void lB()
-{
-  dash();
-  dot();
-  dot();
-  dot();
-  shortspace();
-} // same for B
-void lC()
-{
-  dash();
-  dot();
-  dash();
-  dot();
-  shortspace();
-}
-void lD()
-{
-  dash();
-  dot();
-  dot();
-  shortspace();
-}
-void lE()
-{
-  dot();
-  shortspace();
-}
-void lF()
-{
-  dot();
-  dot();
-  dash();
-  dot();
-  shortspace();
-}
-void lG()
-{
-  dash();
-  dash();
-  dot();
-  shortspace();
-}
-void lH()
-{
-  dot();
-  dot();
-  dot();
-  dot();
-  shortspace();
-}
-void lI()
-{
-  dot();
-  dot();
-  shortspace();
-}
-void lJ()
-{
-  dot();
-  dash();
-  dash();
-  dash();
-  shortspace();
-}
-void lK()
-{
-  dash();
-  dot();
-  dash();
-  shortspace();
-}
-void lL()
-{
-  dot();
-  dash();
-  dot();
-  dot();
-  shortspace();
-}
-void lM()
-{
-  dash();
-  dash();
-  shortspace();
-}
-void lN()
-{
-  dash();
-  dot();
-  shortspace();
-}
-void lO()
-{
-  dash();
-  dash();
-  dash();
-  shortspace();
-}
-void lP()
-{
-  dot();
-  dash();
-  dash();
-  dot();
-  shortspace();
-}
-void lQ()
-{
-  dash();
-  dash();
-  dot();
-  dash();
-  shortspace();
-}
-void lR()
-{
-  dot();
-  dash();
-  dot();
-  shortspace();
-}
-void lS()
-{
-  dot();
-  dot();
-  dot();
-  shortspace();
-}
-void lT()
-{
-  dash();
-  shortspace();
-}
-void lU()
-{
-  dot();
-  dot();
-  dash();
-  shortspace();
-}
-void lV()
-{
-  dot();
-  dot();
-  dot();
-  dash();
-  shortspace();
-}
-void lW()
-{
-  dot();
-  dash();
-  dash();
-  shortspace();
-}
-void lX()
-{
-  dash();
-  dot();
-  dot();
-  dash();
-  shortspace();
-}
-void lY()
-{
-  dash();
-  dot();
-  dash();
-  dash();
-  shortspace();
-}
-void lZ()
-{
-  dash();
-  dash();
-  dot();
-  dot();
-  shortspace();
-}
-void n1()
-{
-  dot();
-  dash();
-  dash();
-  dash();
-  dash();
-  shortspace();
-} // number 1 in morse code
-void n2()
-{
-  dot();
-  dot();
-  dash();
-  dash();
-  dash();
-  shortspace();
-}
-void n3()
-{
-  dot();
-  dot();
-  dot();
-  dash();
-  dash();
-  shortspace();
-}
-void n4()
-{
-  dot();
-  dot();
-  dot();
-  dot();
-  dash();
-  shortspace();
-}
-void n5()
-{
-  dot();
-  dot();
-  dot();
-  dot();
-  dot();
-  shortspace();
-}
-void n6()
-{
-  dash();
-  dot();
-  dot();
-  dot();
-  dot();
-  shortspace();
-}
-void n7()
-{
-  dash();
-  dash();
-  dot();
-  dot();
-  dot();
-  shortspace();
-}
-void n8()
-{
-  dash();
-  dash();
-  dash();
-  dot();
-  dot();
-  shortspace();
-}
-void n9()
-{
-  dash();
-  dash();
-  dash();
-  dash();
-  dot();
-  shortspace();
-}
-void n0()
-{
-  dash();
-  dash();
-  dash();
-  dash();
-  dash();
-  shortspace();
-}
-
-void led_ctrl_morse_char(char input)
+int shortspace()
 {
 
-  if (input == 'a' || input == 'A')
-  {
-    lA();
-  } // if the input is a or A go to function lA
-  if (input == 'b' || input == 'B')
-  {
-    lB();
-  } // same but with b letter
-  if (input == 'c' || input == 'C')
-  {
-    lC();
+  static uint32_t start_time = 0;
+
+  if( morse_state == MORSE_STATE_SHORT_SPACE ){
+
+    if( start_time == 0 ){
+      start_time = millis();
+    }
+
+    if( (millis() - start_time) >= 600 ){
+      start_time = 0;
+      return 1;
+    }
+
   }
-  if (input == 'd' || input == 'D')
-  {
-    lD();
+
+  return 0;
+
+} // space between letters
+
+
+int longspace()
+{
+
+  static uint32_t start_time = 0;
+
+  if( morse_state == MORSE_STATE_LONG_SPACE ){
+
+    if( start_time == 0 ){
+      start_time = millis();
+    }
+
+    if( (millis() - start_time) >= 1200 ){
+      start_time = 0;
+      return 1;
+    }
+
   }
-  if (input == 'e' || input == 'E')
+
+  return 0;
+
+} // space between letters
+
+
+static const char *morse_alpha[] = {
+    ".-",   //A
+    "-...", //B
+    "-.-.", //C
+    "-..",  //D
+    ".",    //E
+    "..-.", //F
+    "--.",  //G
+    "....", //H
+    "..",   //I
+    ".---", //J
+    "-.-",  //K
+    ".-..", //L
+    "--",   //M
+    "-.",   //N
+    "---",  //O
+    ".--.", //P
+    "--.-", //Q
+    ".-.",  //R
+    "...",  //S
+    "-",    //T
+    "..-",  //U
+    "...-", //V
+    ".--",  //W
+    "-..-", //X
+    "-.--", //Y
+    "--..", //Z
+};
+static const char *morse_num[] = {
+    "-----", //0
+    ".----", //1
+    "..---", //2
+    "...--", //3
+    "....-", //4
+    ".....", //5
+    "-....", //6
+    "--...", //7
+    "---..", //8
+    "----.", //9
+};
+
+static const char morse_space[] = " ";
+
+int led_ctrl_morse_char(char input)
+{
+
+  static const char *letter = NULL;
+  static int16_t i = 0;
+
+  if (letter == NULL)
   {
-    lE();
+    //get letter code
+    if (isalpha(input))
+    {
+      letter = morse_alpha[toupper(input) - 'A'];
+    }
+    if (isdigit(input))
+    {
+      letter = morse_num[input - '0'];
+    }
+    if (input == ' ')
+    {
+      letter = morse_space;
+    }
+
+    i = 0;
   }
-  if (input == 'f' || input == 'F')
+
+  if (letter != NULL)
   {
-    lF();
+    //process letter code
+
+    if (letter[i] == '.')
+    {
+      morse_state = MORSE_STATE_DOT;
+      if (dot() == 1)
+      {
+        i++;
+      }
+    }
+
+    if (letter[i] == '-')
+    {
+      morse_state = MORSE_STATE_DASH;
+      if (dash() == 1)
+      {
+        i++;
+      }
+    }
+
+    if( letter[i] == ' ' ){
+      morse_state = MORSE_STATE_LONG_SPACE;
+      if(longspace() == 1){
+        //letter space is transmitted
+        letter = NULL;
+        i = 0;
+        return 1;
+      }
+
+
+    }
+
+    if( letter[i] == '\0'){
+      morse_state = MORSE_STATE_SHORT_SPACE;
+      if(shortspace() == 1){
+        //letter is transmitted
+        letter = NULL;
+        i = 0;
+        return 1;
+      }
+
+    }
   }
-  if (input == 'g' || input == 'G')
-  {
-    lG();
-  }
-  if (input == 'h' || input == 'H')
-  {
-    lH();
-  }
-  if (input == 'i' || input == 'I')
-  {
-    lI();
-  }
-  if (input == 'j' || input == 'J')
-  {
-    lJ();
-  }
-  if (input == 'k' || input == 'K')
-  {
-    lK();
-  }
-  if (input == 'l' || input == 'L')
-  {
-    lL();
-  }
-  if (input == 'm' || input == 'M')
-  {
-    lM();
-  }
-  if (input == 'n' || input == 'N')
-  {
-    lN();
-  }
-  if (input == 'o' || input == 'O')
-  {
-    lO();
-  }
-  if (input == 'p' || input == 'P')
-  {
-    lP();
-  }
-  if (input == 'q' || input == 'Q')
-  {
-    lQ();
-  }
-  if (input == 'r' || input == 'R')
-  {
-    lR();
-  }
-  if (input == 's' || input == 'S')
-  {
-    lS();
-  }
-  if (input == 't' || input == 'T')
-  {
-    lT();
-  }
-  if (input == 'u' || input == 'U')
-  {
-    lU();
-  }
-  if (input == 'v' || input == 'V')
-  {
-    lV();
-  }
-  if (input == 'w' || input == 'W')
-  {
-    lW();
-  }
-  if (input == 'x' || input == 'X')
-  {
-    lX();
-  }
-  if (input == 'y' || input == 'Y')
-  {
-    lY();
-  }
-  if (input == 'z' || input == 'Z')
-  {
-    lZ();
-  }
-  if (input == '1')
-  {
-    n1();
-  } // the numbers
-  if (input == '2')
-  {
-    n2();
-  }
-  if (input == '3')
-  {
-    n3();
-  }
-  if (input == '4')
-  {
-    n4();
-  }
-  if (input == '5')
-  {
-    n5();
-  }
-  if (input == '6')
-  {
-    n6();
-  }
-  if (input == '7')
-  {
-    n7();
-  }
-  if (input == '8')
-  {
-    n8();
-  }
-  if (input == '9')
-  {
-    n9();
-  }
-  if (input == '0')
-  {
-    n0();
-  }
-  if (input == ' ')
-  {
-    space();
-  } // the space
+
+  return 0;
 }
 
+/*
 void led_ctrl_morse_msg(const char *msg)
 {
 
@@ -793,3 +687,4 @@ void led_ctrl_morse_msg(const char *msg)
     led_ctrl_morse_char(msg[i]);
   }
 }
+*/

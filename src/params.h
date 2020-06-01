@@ -37,6 +37,7 @@ struct params_led_ctrl_0007{
     uint8_t r;
     uint8_t g;
     uint8_t b;
+    uint32_t puase_btw_msg; //pause between messages
 };
 
 struct parameters{

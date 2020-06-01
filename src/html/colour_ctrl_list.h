@@ -10,8 +10,6 @@ const char html_page_colour_ctrl_list[] = R"=====(
 
 
 
-
-
 <!DOCTYPE html>
 <html>
 
@@ -36,7 +34,7 @@ const char html_page_colour_ctrl_list[] = R"=====(
         
         .button001 {
             border-radius: 2px;
-            background-color:gold;
+            background-color: aqua;
             color: chocolate;
             }
         .button002 {
@@ -54,16 +52,21 @@ const char html_page_colour_ctrl_list[] = R"=====(
 
 <body>
 
-
     <div style="width: 100%;">
 
-        <h1 style="text-align: center;">Main page</h1>
+        <h1 style="text-align: center;">Press on one of the buttons to select mode</h1>
 
 
-            <button class="button button001" onclick="window.location.href = 'colour_ctrl.html';"> Colour control </button>
+            <button class="button button001" onclick="window.location.href = 'html_led_ctrl_0001.html';"> RGB colour select</button>
             <p></p>
-            <button class="button button002" onclick="window.location.href = 'settings.html';"> Settings </button>
+            <button class="button button002" onclick="window.location.href = 'html_led_ctrl_0002.html';"> Random colour  </button>
             
+            <p><h6> </h6></p>
+            <p><h6> </h6></p>
+            <p><h6> </h6></p>
+            <p><h6> </h6></p>
+            <p><h6> </h6></p>
+            <button class="button button100" onclick="window.location.href = '/';"> Main Page  </button>
     </div>
 
 </body>
