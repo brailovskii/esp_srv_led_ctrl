@@ -1,0 +1,10 @@
+
+
+*add random light effect
+*add morse message
+*add main page with info
+
+
+
+
+*add settings page
