@@ -88,7 +88,7 @@ void write_def_gen_params(struct parameters *ctx){
     sprintf(ctx->host_name, "%s", DEFAULT_HOST_NAME);
 
 
-    ctx->led_mode = 2;
+    ctx->led_mode = 3;
 
     ctx->led_ctrl_0001.r = 25;
     ctx->led_ctrl_0001.g = 26;
@@ -109,8 +109,8 @@ void write_def_gen_params(struct parameters *ctx){
 
 
     ctx->led_ctrl_0007.r = 200;
-    ctx->led_ctrl_0007.g = 200;
-    ctx->led_ctrl_0007.b = 200;
+    ctx->led_ctrl_0007.g = 100;
+    ctx->led_ctrl_0007.b = 50;
     ctx->led_ctrl_0007.puase_btw_msg = 3000;
     strcpy(ctx->led_ctrl_0007.msg, "I love you");
 
@@ -148,7 +148,7 @@ void params_init(void){
     Serial.println(params.crc);
     Serial.println("...");
 
-    uint32_t clc_crc = checksum16_calc(&params, sizeof(struct parameters)-sizeof(params.crc) );
+    uint32_t clc_crc =  checksum16_calc(&params, sizeof(struct parameters)-sizeof(params.crc) );
 
     Serial.println("Calculated CRC is: ");
     Serial.println(clc_crc);

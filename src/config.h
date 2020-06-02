@@ -3,7 +3,7 @@
 
 #include "stdint.h"
 
-#define NUM_LEDS    16
+#define NUM_LEDS    8
 
 #define LED_CTRL_CALL_PERIOD 50
 

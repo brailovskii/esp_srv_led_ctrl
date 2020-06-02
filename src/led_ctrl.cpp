@@ -324,6 +324,19 @@ void prc_led_ctrl_0002(void)
 void prc_led_ctrl_0003(void)
 {
 
+
+  static int led[3] = {0, 2, 4};
+
+  memset(leds_buf,0, sizeof(leds_buf));
+
+  leds_buf[0][led[0]%NUM_LEDS] = 255;
+  leds_buf[1][led[1]%NUM_LEDS] = 255;
+  leds_buf[2][led[2]%NUM_LEDS] = 255;
+
+  led[0] += 1;
+  led[1] += 1;
+  led[2] += 1;
+
   led_ctrl_update();
 }
 
