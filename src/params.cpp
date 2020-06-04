@@ -88,7 +88,7 @@ void write_def_gen_params(struct parameters *ctx){
     sprintf(ctx->host_name, "%s", DEFAULT_HOST_NAME);
 
 
-    ctx->led_mode = 3;
+    ctx->led_mode = 2;
 
     ctx->led_ctrl_0001.r = 25;
     ctx->led_ctrl_0001.g = 26;

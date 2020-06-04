@@ -194,7 +194,7 @@ void prc_led_ctrl_0002(void)
   int r_step = 1, g_step = 1, b_step = 1;
 
   r_min = params.led_ctrl_0002.rmin;
-  r_max = params.led_ctrl_0002.rmin;
+  r_max = params.led_ctrl_0002.rmax;
   g_min = params.led_ctrl_0002.gmin;
   g_max = params.led_ctrl_0002.gmax;
   b_min = params.led_ctrl_0002.bmin;
@@ -373,9 +373,11 @@ void prc_led_ctrl_0007(void)
         //letter has been transmitted
         i++;
 
+/*
         Serial.println("next letter:");
         Serial.println(msg[i]);
         Serial.println(msg[i], DEC);
+*/        
       }
     }
   }

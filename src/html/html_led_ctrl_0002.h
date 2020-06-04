@@ -121,7 +121,7 @@ const char html_page_led_ctrl_0002[] = R"=====(
                             this.responseText;
                     }
                 };
-                xhttp.open("GET", "led_ctrl_0002?json_msg=" + send_str, true);
+                xhttp.open("GET", "led_ctrl_0002.html?json_msg=" + send_str, true);
                 xhttp.send();
 
             }

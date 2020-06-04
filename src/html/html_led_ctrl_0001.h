@@ -103,7 +103,7 @@ const char html_page_led_ctrl_0001[] = R"=====(
                             this.responseText;
                     }
                 };
-                xhttp.open("GET", "led_ctrl_0001?json_msg=" + send_str, true);
+                xhttp.open("GET", "led_ctrl_0001.html?json_msg=" + send_str, true);
                 xhttp.send();
 
             }

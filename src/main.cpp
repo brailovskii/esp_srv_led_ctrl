@@ -69,6 +69,7 @@ void wifi_sta_100ms_cb()
 
 
 
+int en_sta_mode = 1;
 
 //===============================================================
 //                  SETUP
@@ -91,11 +92,17 @@ void setup(void)
   delay(50);
 
 
+if(en_sta_mode == 1){
+
+
   Serial.println("Configuring Station mode...");
   Serial.println(&params.sta_ssid[0][0]);
   Serial.println(&params.sta_pwd[0][0]);
   WiFi.begin(&params.sta_ssid[0][0], &params.sta_pwd[0][0]);
 
+
+
+}
 
   /* Setup the DNS server redirecting all the domains to the apIP */
   dnsServer.setErrorReplyCode(DNSReplyCode::NoError);
@@ -107,7 +114,11 @@ void setup(void)
   //initialize leds
   led_ctrl_init();
 
+if(en_sta_mode == 1){
   t.every(1000, wifi_sta_100ms_cb);
+}
+
+
   t.every(LED_CTRL_CALL_PERIOD, led_ctrl_proces);
 }
 
@@ -128,6 +139,8 @@ void loop(void)
   dnsServer.processNextRequest();
   
   srv_http_process();
+
+  //Serial.println(ESP.getFreeHeap());
 }
 
 

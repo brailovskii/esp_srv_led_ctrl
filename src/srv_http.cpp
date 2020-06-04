@@ -8,6 +8,7 @@
 
 #include "html/html_led_ctrl_0001.h"
 #include "html/html_led_ctrl_0002.h"
+#include "html/html_led_ctrl_0007.h"
 #include "html/html_main_page.h"
 #include "html/colour_ctrl_list.h"
 
@@ -87,17 +88,13 @@ void handle_settings(void){
 
 void handle_colour_ctrl_list(void){
 
-
   String s = html_page_colour_ctrl_list;
 
-  Serial.println("Color control list html page requested...");
-  Serial.println(s);
-
   server.send(200, "text/html", s); //Send web page
-
 }
 
 void handle_html_led_ctrl_0001(void){
+
 
   String s = html_page_led_ctrl_0001;             //Read HTML contents
 
@@ -112,6 +109,7 @@ void handle_html_led_ctrl_0001(void){
 
 
   server.send(200, "text/html", s); //Send web page
+  
 
 }
 void handle_html_led_ctrl_0002(void){
@@ -143,7 +141,32 @@ void handle_html_led_ctrl_0002(void){
  s.replace("value=\"5555\" id=\"col_upd_rate\"", "value=\"" + col_upd_rate + "\" id=\"col_upd_rate\"");
 
   server.send(200, "text/html", s); //Send web page
+
+
 }
+
+void handle_html_led_ctrl_0007(void)
+{
+
+  
+
+  String s = html_page_led_ctrl_0007;             //Read HTML contents
+
+
+  String rrate(params.led_ctrl_0007.r);
+  String grate(params.led_ctrl_0007.g);
+  String brate(params.led_ctrl_0007.b);
+  String msg(params.led_ctrl_0007.msg);
+
+ s.replace("value=\"5555\" id=\"Rrate\"", "value=\"" + rrate + "\" id=\"Rrate\"");
+ s.replace("value=\"5555\" id=\"Grate\"", "value=\"" + grate + "\" id=\"Grate\"");
+ s.replace("value=\"5555\" id=\"Brate\"", "value=\"" + brate + "\" id=\"Brate\"");
+ s.replace("value=\"message\" id=\"msg_id\"", "value=\"" + msg + "\" id=\"msg_id\"");
+
+  server.send(200, "text/html", s ); //Send web page
+
+}
+
 
 void handle_led_ctrl_0001(void)
 {
@@ -169,6 +192,7 @@ void handle_led_ctrl_0002(void)
 
   char response[128];
 
+
   String msg = server.arg("json_msg");
   msg_parser_parse(msg.c_str(), response);
 
@@ -177,6 +201,29 @@ void handle_led_ctrl_0002(void)
 
   server.send(200, "text/plane", resp); //Send web page
 }
+
+
+
+void handle_led_ctrl_0007(void)
+{
+
+  static int cnt = 0;
+
+  cnt++;
+
+  char response[128] = "0007 response";
+
+
+  String msg = server.arg("json_msg");
+  msg_parser_parse(msg.c_str(), response);
+
+
+  String s(response);
+  String resp = String(cnt) + " " + s;
+
+  server.send(200, "text/plane", resp); //Send web page
+}
+
 
 
 
@@ -195,10 +242,13 @@ void srv_http_init(void)
   //these html pages are responsible for showing html content
   server.on("/html_led_ctrl_0001.html", handle_html_led_ctrl_0001);
   server.on("/html_led_ctrl_0002.html", handle_html_led_ctrl_0002);
+  server.on("/html_led_ctrl_0007.html", handle_html_led_ctrl_0007);
 
   //these addresses are responsible for AJAX data process
-  server.on("/led_ctrl_0001", handle_led_ctrl_0001);
-  server.on("/led_ctrl_0002", handle_led_ctrl_0002);
+  server.on("/led_ctrl_0001.html", handle_led_ctrl_0001);
+  server.on("/led_ctrl_0002.html", handle_led_ctrl_0002);
+  server.on("/led_ctrl_0007.html", handle_led_ctrl_0007);
+
 
 
   server.on("/generate_204", handleRoot); //Android captive portal. Maybe not needed. Might be handled by notFound handler.

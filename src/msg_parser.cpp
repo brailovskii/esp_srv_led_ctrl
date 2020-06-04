@@ -65,22 +65,19 @@ int led_ctrl_parse_json_msg_id_0002(const char *json_msg, char *resp)
     // Serial.println("parser 002");
     // Serial.println(json_msg);
 
-
     int res = 0;
     if (strstr(json_msg, "\"save\":\"yes\"") != NULL)
     {
-    res = sscanf(json_msg,
+        res = sscanf(json_msg,
                      "{\"type\":\"led_ctrl\",\"id\":\"2\",\"save\":\"yes\",\"cnt\":\"%d\",\"rmin\":\"%d\",\"rmax\":\"%d\",\"gmin\":\"%d\",\"gmax\":\"%d\",\"bmin\":\"%d\",\"bmax\":\"%d\",\"rrate\":\"%d\",\"grate\":\"%d\",\"brate\":\"%d\",\"col_upd_rate\":\"%d\"}",
                      &cnt, &rmin, &rmax, &gmin, &gmax, &bmin, &bmax, &rrate, &grate, &brate, &col_upd_rate);
     }
     else
     {
-    res = sscanf(json_msg,
+        res = sscanf(json_msg,
                      "{\"type\":\"led_ctrl\",\"id\":\"2\",\"save\":\"no\",\"cnt\":\"%d\",\"rmin\":\"%d\",\"rmax\":\"%d\",\"gmin\":\"%d\",\"gmax\":\"%d\",\"bmin\":\"%d\",\"bmax\":\"%d\",\"rrate\":\"%d\",\"grate\":\"%d\",\"brate\":\"%d\",\"col_upd_rate\":\"%d\"}",
                      &cnt, &rmin, &rmax, &gmin, &gmax, &bmin, &bmax, &rrate, &grate, &brate, &col_upd_rate);
     }
-
-
 
     if (res != 11)
     {
@@ -104,6 +101,62 @@ int led_ctrl_parse_json_msg_id_0002(const char *json_msg, char *resp)
 
     return 0;
 }
+
+
+int led_ctrl_parse_json_msg_id_0007(const char *json_msg, char *resp)
+{
+
+    /*
+        At the end of message should be space or terminating character for proper sscanf 
+    */
+    //'{"type":"led_ctrl","id":"7","save":"no","cnt":"0000","rrate":"0000","grate":"0000","brate":"0000","msg":"0000 "}';
+
+    int rrate = -1, grate = -1, brate = -1;
+    int cnt;
+    char msg[64];
+
+    // Serial.println("parser 002");
+    // Serial.println(json_msg);
+
+    int res = 0;
+    if (strstr(json_msg, "\"save\":\"yes\"") != NULL)
+    {
+        res = sscanf(json_msg,
+                     "{\"type\":\"led_ctrl\",\"id\":\"7\",\"save\":\"yes\",\"cnt\":\"%d\",\"rrate\":\"%d\",\"grate\":\"%d\",\"brate\":\"%d\",\"msg\":\"%s\"}",
+                     &cnt,  &rrate, &grate, &brate, msg);
+    }
+    else
+    {
+        res = sscanf(json_msg,
+                     "{\"type\":\"led_ctrl\",\"id\":\"7\",\"save\":\"no\",\"cnt\":\"%d\",\"rrate\":\"%d\",\"grate\":\"%d\",\"brate\":\"%d\",\"msg\":\"%s\"}",
+                     &cnt, &rrate, &grate, &brate, msg);
+    }
+
+    if (res != 5)
+    {
+        //one of parameters could not be read
+        sprintf(resp, "led_ctrl_0007 parse error");
+        return -1;
+    }
+
+    //replace all _ with spaces
+    for(int i = 0; i < strlen(msg); i++){
+        if(msg[i] == '_'){
+            msg[i] = ' ';
+        }
+    }
+
+
+    params.led_ctrl_0007.r = rrate;
+    params.led_ctrl_0007.g = grate;
+    params.led_ctrl_0007.b = brate;
+    strcpy(params.led_ctrl_0007.msg, msg);
+
+    sprintf(resp, "!  %d;%d;%d; %s;", rrate, grate, brate, msg);
+
+    return 0;
+}
+
 
 int msg_parser_parse(const char *json_msg, char *resp)
 {
@@ -159,6 +212,14 @@ int msg_parser_parse(const char *json_msg, char *resp)
         {
             params.led_mode = 2;
         }
+        break;
+    case 7:
+        res = led_ctrl_parse_json_msg_id_0007(json_msg, resp);
+        if (res == 0)
+        {
+            params.led_mode = 7;
+        }
+        break;
 
     default:
         break;

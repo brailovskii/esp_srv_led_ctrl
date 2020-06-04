@@ -10,6 +10,9 @@ const char html_page_colour_ctrl_list[] = R"=====(
 
 
 
+
+
+
 <!DOCTYPE html>
 <html>
 
@@ -60,7 +63,8 @@ const char html_page_colour_ctrl_list[] = R"=====(
             <button class="button button001" onclick="window.location.href = 'html_led_ctrl_0001.html';"> RGB colour select</button>
             <p></p>
             <button class="button button002" onclick="window.location.href = 'html_led_ctrl_0002.html';"> Random colour  </button>
-            
+            <p></p>
+            <button class="button button003" onclick="window.location.href = 'html_led_ctrl_0007.html';"> Morse Message  </button>
             <p><h6> </h6></p>
             <p><h6> </h6></p>
             <p><h6> </h6></p>
@@ -72,11 +76,6 @@ const char html_page_colour_ctrl_list[] = R"=====(
 </body>
 
 </html>
-
-
-
-
-
 
 
 
