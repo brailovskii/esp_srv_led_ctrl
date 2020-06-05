@@ -7,12 +7,12 @@
 
 #define LED_CTRL_CALL_PERIOD 50
 
-#define LED_PIN     1
+#define LED_PIN     1 //this led pin is pin on nodemcu board. WS2812b leds are connected via 220R series resistor
 
-#define LED_FACTORY_BRIGHTNESS_COEF 0.99999
+#define LED_FACTORY_BRIGHTNESS_COEF 0.8
 
 
-#define DEFAULT_AP_SSID "lightning"
+#define DEFAULT_AP_SSID "shine_bright"
 #define DEFAULT_AP_PWD  "12345678"
 
 #define DEFAULT_STA_SSID_1    "135711131719"
