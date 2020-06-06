@@ -88,13 +88,12 @@ void write_def_gen_params(struct parameters *ctx){
     sprintf(ctx->host_name, "%s", DEFAULT_HOST_NAME);
 
 
-    ctx->led_mode = 2;
+    ctx->led_mode = 3;
 
     ctx->led_ctrl_0001.r = 25;
     ctx->led_ctrl_0001.g = 26;
     ctx->led_ctrl_0001.b = 36;
     ctx->led_ctrl_0001.br = 100;
-
 
     ctx->led_ctrl_0002.rmin = 0;
     ctx->led_ctrl_0002.rmax = 255;
@@ -107,6 +106,13 @@ void write_def_gen_params(struct parameters *ctx){
     ctx->led_ctrl_0002.brate = 5;
     ctx->led_ctrl_0002.col_upd_rate = 15;
 
+    ctx->led_ctrl_0003.r = 180;
+    ctx->led_ctrl_0003.g = 190;
+    ctx->led_ctrl_0003.b = 200;
+    ctx->led_ctrl_0003.rrate = 1;
+    ctx->led_ctrl_0003.grate = 17;
+    ctx->led_ctrl_0003.brate = 5;
+    ctx->led_ctrl_0003.upd_rate = 2;
 
     ctx->led_ctrl_0007.r = 200;
     ctx->led_ctrl_0007.g = 100;

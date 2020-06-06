@@ -31,6 +31,20 @@ struct params_led_ctrl_0002{
 };
 
 
+struct params_led_ctrl_0003{
+
+    uint8_t rrate;
+    uint8_t grate;
+    uint8_t brate;
+
+    uint8_t r;
+    uint8_t g;
+    uint8_t b;
+
+    uint16_t upd_rate;
+};
+
+
 struct params_led_ctrl_0007{
 
     char msg[32];
@@ -54,6 +68,7 @@ struct parameters{
 
     struct params_led_ctrl_0001 led_ctrl_0001;
     struct params_led_ctrl_0002 led_ctrl_0002;
+    struct params_led_ctrl_0003 led_ctrl_0003;
     struct params_led_ctrl_0007 led_ctrl_0007;
 
     /*checksum must be at the end of structure*/

@@ -5,13 +5,12 @@
 #include <ESP8266WebServer.h>
 #include <FastLED.h>
 
-
 #include "html/html_led_ctrl_0001.h"
 #include "html/html_led_ctrl_0002.h"
+#include "html/html_led_ctrl_0003.h"
 #include "html/html_led_ctrl_0007.h"
 #include "html/html_main_page.h"
 #include "html/colour_ctrl_list.h"
-
 
 #include "config.h"
 
@@ -75,28 +74,29 @@ void handleRoot()
     return;
   }
 
-  String s = html_page_main;             //Read HTML contents
+  String s = html_page_main; //Read HTML contents
 
   server.send(200, "text/html", s); //Send web page
 }
 
-
-void handle_settings(void){
+void handle_settings(void)
+{
 
   server.send(200, "text/html", "Here will be settings"); //Send web page
 }
 
-void handle_colour_ctrl_list(void){
+void handle_colour_ctrl_list(void)
+{
 
   String s = html_page_colour_ctrl_list;
 
   server.send(200, "text/html", s); //Send web page
 }
 
-void handle_html_led_ctrl_0001(void){
+void handle_html_led_ctrl_0001(void)
+{
 
-
-  String s = html_page_led_ctrl_0001;             //Read HTML contents
+  String s = html_page_led_ctrl_0001; //Read HTML contents
 
   String r(params.led_ctrl_0001.r);
   String g(params.led_ctrl_0001.g);
@@ -107,15 +107,11 @@ void handle_html_led_ctrl_0001(void){
   s.replace("value=\"5555\" id=\"range_B\"", "value=\"" + b + "\" id=\"range_B\"");
   s.replace("value=\"5555\" id=\"range_Brightness\"", "value=\"" + br + "\" id=\"range_Brightness\"");
 
-
   server.send(200, "text/html", s); //Send web page
-  
-
 }
-void handle_html_led_ctrl_0002(void){
-
-
-  String s = html_page_led_ctrl_0002;             //Read HTML contents
+void handle_html_led_ctrl_0002(void)
+{
+  String s = html_page_led_ctrl_0002; //Read HTML contents
 
   String rmin(params.led_ctrl_0002.rmin);
   String rmax(params.led_ctrl_0002.rmax);
@@ -128,44 +124,73 @@ void handle_html_led_ctrl_0002(void){
   String brate(params.led_ctrl_0002.brate);
   String col_upd_rate(params.led_ctrl_0002.col_upd_rate);
 
-
- s.replace("value=\"5555\" id=\"Rmin\"", "value=\"" + rmin + "\" id=\"Rmin\"");
- s.replace("value=\"5555\" id=\"Rmax\"", "value=\"" + rmax + "\" id=\"Rmax\"");
- s.replace("value=\"5555\" id=\"Gmin\"", "value=\"" + gmin + "\" id=\"Gmin\"");
- s.replace("value=\"5555\" id=\"Gmax\"", "value=\"" + gmax + "\" id=\"Gmax\"");
- s.replace("value=\"5555\" id=\"Bmin\"", "value=\"" + bmin + "\" id=\"Bmin\"");
- s.replace("value=\"5555\" id=\"Bmax\"", "value=\"" + bmax + "\" id=\"Bmax\"");
- s.replace("value=\"5555\" id=\"Rrate\"", "value=\"" + rrate + "\" id=\"Rrate\"");
- s.replace("value=\"5555\" id=\"Grate\"", "value=\"" + grate + "\" id=\"Grate\"");
- s.replace("value=\"5555\" id=\"Brate\"", "value=\"" + brate + "\" id=\"Brate\"");
- s.replace("value=\"5555\" id=\"col_upd_rate\"", "value=\"" + col_upd_rate + "\" id=\"col_upd_rate\"");
+  s.replace("value=\"5555\" id=\"Rmin\"", "value=\"" + rmin + "\" id=\"Rmin\"");
+  s.replace("value=\"5555\" id=\"Rmax\"", "value=\"" + rmax + "\" id=\"Rmax\"");
+  s.replace("value=\"5555\" id=\"Gmin\"", "value=\"" + gmin + "\" id=\"Gmin\"");
+  s.replace("value=\"5555\" id=\"Gmax\"", "value=\"" + gmax + "\" id=\"Gmax\"");
+  s.replace("value=\"5555\" id=\"Bmin\"", "value=\"" + bmin + "\" id=\"Bmin\"");
+  s.replace("value=\"5555\" id=\"Bmax\"", "value=\"" + bmax + "\" id=\"Bmax\"");
+  s.replace("value=\"5555\" id=\"Rrate\"", "value=\"" + rrate + "\" id=\"Rrate\"");
+  s.replace("value=\"5555\" id=\"Grate\"", "value=\"" + grate + "\" id=\"Grate\"");
+  s.replace("value=\"5555\" id=\"Brate\"", "value=\"" + brate + "\" id=\"Brate\"");
+  s.replace("value=\"5555\" id=\"col_upd_rate\"", "value=\"" + col_upd_rate + "\" id=\"col_upd_rate\"");
 
   server.send(200, "text/html", s); //Send web page
+}
 
+void handle_html_led_ctrl_0003(void)
+{
 
+  String s = html_page_led_ctrl_0003; //Read HTML contents
+
+/*
+  String rmin(params.led_ctrl_0002.rmin);
+  String rmax(params.led_ctrl_0002.rmax);
+  String gmin(params.led_ctrl_0002.gmin);
+  String gmax(params.led_ctrl_0002.gmax);
+  String bmin(params.led_ctrl_0002.bmin);
+  String bmax(params.led_ctrl_0002.bmax);
+  String rrate(params.led_ctrl_0002.rrate);
+  String grate(params.led_ctrl_0002.grate);
+  String brate(params.led_ctrl_0002.brate);
+  String col_upd_rate(params.led_ctrl_0002.col_upd_rate);
+
+  s.replace("value=\"5555\" id=\"Rmin\"", "value=\"" + rmin + "\" id=\"Rmin\"");
+  s.replace("value=\"5555\" id=\"Rmax\"", "value=\"" + rmax + "\" id=\"Rmax\"");
+  s.replace("value=\"5555\" id=\"Gmin\"", "value=\"" + gmin + "\" id=\"Gmin\"");
+  s.replace("value=\"5555\" id=\"Gmax\"", "value=\"" + gmax + "\" id=\"Gmax\"");
+  s.replace("value=\"5555\" id=\"Bmin\"", "value=\"" + bmin + "\" id=\"Bmin\"");
+  s.replace("value=\"5555\" id=\"Bmax\"", "value=\"" + bmax + "\" id=\"Bmax\"");
+  s.replace("value=\"5555\" id=\"Rrate\"", "value=\"" + rrate + "\" id=\"Rrate\"");
+  s.replace("value=\"5555\" id=\"Grate\"", "value=\"" + grate + "\" id=\"Grate\"");
+  s.replace("value=\"5555\" id=\"Brate\"", "value=\"" + brate + "\" id=\"Brate\"");
+  s.replace("value=\"5555\" id=\"col_upd_rate\"", "value=\"" + col_upd_rate + "\" id=\"col_upd_rate\"");
+*/
+
+  server.send(200, "text/html", s); //Send web page
 }
 
 void handle_html_led_ctrl_0007(void)
 {
 
-  
-
-  String s = html_page_led_ctrl_0007;             //Read HTML contents
-
+  String s = html_page_led_ctrl_0007; //Read HTML contents
 
   String rrate(params.led_ctrl_0007.r);
   String grate(params.led_ctrl_0007.g);
   String brate(params.led_ctrl_0007.b);
   String msg(params.led_ctrl_0007.msg);
 
- s.replace("value=\"5555\" id=\"Rrate\"", "value=\"" + rrate + "\" id=\"Rrate\"");
- s.replace("value=\"5555\" id=\"Grate\"", "value=\"" + grate + "\" id=\"Grate\"");
- s.replace("value=\"5555\" id=\"Brate\"", "value=\"" + brate + "\" id=\"Brate\"");
- s.replace("value=\"message\" id=\"msg_id\"", "value=\"" + msg + "\" id=\"msg_id\"");
+  s.replace("value=\"5555\" id=\"Rrate\"", "value=\"" + rrate + "\" id=\"Rrate\"");
+  s.replace("value=\"5555\" id=\"Grate\"", "value=\"" + grate + "\" id=\"Grate\"");
+  s.replace("value=\"5555\" id=\"Brate\"", "value=\"" + brate + "\" id=\"Brate\"");
+  s.replace("value=\"message\" id=\"msg_id\"", "value=\"" + msg + "\" id=\"msg_id\"");
 
-  server.send(200, "text/html", s ); //Send web page
-
+  server.send(200, "text/html", s); //Send web page
 }
+
+
+
+
 
 
 void handle_led_ctrl_0001(void)
@@ -173,7 +198,7 @@ void handle_led_ctrl_0001(void)
   static int cnt = 0;
   char response[128];
 
-  cnt++;  
+  cnt++;
   String msg = server.arg("json_msg");
   msg_parser_parse(msg.c_str(), response);
 
@@ -192,7 +217,6 @@ void handle_led_ctrl_0002(void)
 
   char response[128];
 
-
   String msg = server.arg("json_msg");
   msg_parser_parse(msg.c_str(), response);
 
@@ -202,6 +226,26 @@ void handle_led_ctrl_0002(void)
   server.send(200, "text/plane", resp); //Send web page
 }
 
+void handle_led_ctrl_0003(void)
+{
+
+  static int cnt = 0;
+
+  cnt++;
+
+  char response[128] = "0003";
+
+
+/*
+  String msg = server.arg("json_msg");
+  msg_parser_parse(msg.c_str(), response);
+*/
+
+  String s(response);
+  String resp = String(cnt) + " " + s;
+
+  server.send(200, "text/plane", resp); //Send web page
+}
 
 
 void handle_led_ctrl_0007(void)
@@ -213,22 +257,14 @@ void handle_led_ctrl_0007(void)
 
   char response[128] = "0007 response";
 
-
   String msg = server.arg("json_msg");
   msg_parser_parse(msg.c_str(), response);
-
 
   String s(response);
   String resp = String(cnt) + " " + s;
 
   server.send(200, "text/plane", resp); //Send web page
 }
-
-
-
-
-
-
 
 void srv_http_init(void)
 {
@@ -238,18 +274,17 @@ void srv_http_init(void)
   server.on("/colour_ctrl.html", handle_colour_ctrl_list);
   server.on("/settings.html", handle_settings);
 
-
   //these html pages are responsible for showing html content
   server.on("/html_led_ctrl_0001.html", handle_html_led_ctrl_0001);
   server.on("/html_led_ctrl_0002.html", handle_html_led_ctrl_0002);
+  server.on("/html_led_ctrl_0003.html", handle_html_led_ctrl_0003);
   server.on("/html_led_ctrl_0007.html", handle_html_led_ctrl_0007);
 
   //these addresses are responsible for AJAX data process
   server.on("/led_ctrl_0001.html", handle_led_ctrl_0001);
   server.on("/led_ctrl_0002.html", handle_led_ctrl_0002);
+  server.on("/led_ctrl_0003.html", handle_led_ctrl_0003);
   server.on("/led_ctrl_0007.html", handle_led_ctrl_0007);
-
-
 
   server.on("/generate_204", handleRoot); //Android captive portal. Maybe not needed. Might be handled by notFound handler.
   server.on("/fwlink", handleRoot);       //Microsoft captive portal. Maybe not needed. Might be handled by notFound handler.
@@ -257,6 +292,7 @@ void srv_http_init(void)
   server.begin(); //Start server
   Serial.println("HTTP server started");
 }
+
 
 
 void srv_http_process(void)

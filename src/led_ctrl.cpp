@@ -252,10 +252,6 @@ void prc_led_ctrl_0002(void)
       b_dir = 0;
     }
 
-    // Serial.println("\nNew goal values: ");
-    // Serial.println(r_goal);
-    // Serial.println(g_goal);
-    // Serial.println(b_goal);
   }
 
   cnt++;
@@ -311,11 +307,6 @@ void prc_led_ctrl_0002(void)
     }
   }
 
-  // Serial.println("\nRGB values: ");
-  // Serial.println(r);
-  // Serial.println(g);
-  // Serial.println(b);
-
   led_ctr_set_all(r, g, b);
 
   led_ctrl_update();
@@ -324,18 +315,30 @@ void prc_led_ctrl_0002(void)
 void prc_led_ctrl_0003(void)
 {
 
+  static int led[3] = {0, 1, 2};
+  static int cnt = 0;
 
-  static int led[3] = {0, 2, 4};
+  uint8_t r_adder = params.led_ctrl_0003.rrate;
+  uint8_t g_adder = params.led_ctrl_0003.grate;
+  uint8_t b_adder = params.led_ctrl_0003.brate;
+  uint8_t r = params.led_ctrl_0003.r;
+  uint8_t g = params.led_ctrl_0003.g;
+  uint8_t b = params.led_ctrl_0003.b;
+  uint16_t upd_rate = params.led_ctrl_0003.upd_rate;
+
+  if( (++cnt%upd_rate) != 0){
+    return;
+  }
 
   memset(leds_buf,0, sizeof(leds_buf));
 
-  leds_buf[0][led[0]%NUM_LEDS] = 255;
-  leds_buf[1][led[1]%NUM_LEDS] = 255;
-  leds_buf[2][led[2]%NUM_LEDS] = 255;
+  leds_buf[0][ led[0]%NUM_LEDS ] = r;
+  leds_buf[1][ led[1]%NUM_LEDS ] = g;
+  leds_buf[2][ led[2]%NUM_LEDS ] = b;
 
-  led[0] += 1;
-  led[1] += 1;
-  led[2] += 1;
+  led[0] += r_adder;
+  led[1] += g_adder;
+  led[2] += b_adder;
 
   led_ctrl_update();
 }
