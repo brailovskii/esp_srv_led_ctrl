@@ -47,6 +47,16 @@ void wifi_sta_100ms_cb()
     Serial.print("STA IP: ");
     Serial.println(WiFi.localIP());
 
+    inst_info.sta_ip[0] = WiFi.localIP()[0];
+    inst_info.sta_ip[1] = WiFi.localIP()[1];
+    inst_info.sta_ip[2] = WiFi.localIP()[2];
+    inst_info.sta_ip[3] = WiFi.localIP()[3];
+
+    inst_info.ap_ip[0] = WiFi.softAPIP()[0];
+    inst_info.ap_ip[1] = WiFi.softAPIP()[1];
+    inst_info.ap_ip[2] = WiFi.softAPIP()[2];
+    inst_info.ap_ip[3] = WiFi.softAPIP()[3];
+
     if (!MDNS.begin(params.host_name)) {
       Serial.println("Error setting up MDNS responder!");
     } else {

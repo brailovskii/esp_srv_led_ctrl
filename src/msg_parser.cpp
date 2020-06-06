@@ -102,6 +102,49 @@ int led_ctrl_parse_json_msg_id_0002(const char *json_msg, char *resp)
     return 0;
 }
 
+int led_ctrl_parse_json_msg_id_0003(const char *json_msg, char *resp)
+{
+
+    // {"type":"led_ctrl","id":"3","save":"no","cnt":"0","red":"255","green":"255","blue":"255","rrate":"20","grate":"20","brate":"20","col_upd_rate":"200"}
+    int r = -1, g = -1, b = -1, rrate = -1, grate = -1, brate = -1, col_upd_rate = -1;
+    int cnt;
+
+
+    int res = 0;
+    if (strstr(json_msg, "\"save\":\"yes\"") != NULL)
+    {
+        res = sscanf(json_msg,
+        "{\"type\":\"led_ctrl\",\"id\":\"3\",\"save\":\"yes\",\"cnt\":\"%d\",\"red\":\"%d\",\"green\":\"%d\",\"blue\":\"%d\",\"rrate\":\"%d\",\"grate\":\"%d\",\"brate\":\"%d\",\"col_upd_rate\":\"%d\"}",
+                     &cnt, &r, &g, &b, &rrate, &grate, &brate, &col_upd_rate);
+    }
+    else
+    {
+         res = sscanf(json_msg,
+        "{\"type\":\"led_ctrl\",\"id\":\"3\",\"save\":\"no\",\"cnt\":\"%d\",\"red\":\"%d\",\"green\":\"%d\",\"blue\":\"%d\",\"rrate\":\"%d\",\"grate\":\"%d\",\"brate\":\"%d\",\"col_upd_rate\":\"%d\"}",
+                     &cnt, &r, &g, &b, &rrate, &grate, &brate, &col_upd_rate);
+    }
+
+    if (res != 8)
+    {
+        //one of parameters could not be read
+        sprintf(resp, "led_ctrl_0003 parse error");
+        return -1;
+    }
+
+ 
+    params.led_ctrl_0003.r = r;
+    params.led_ctrl_0003.g = g;
+    params.led_ctrl_0003.b = b;
+    params.led_ctrl_0003.rrate = rrate;
+    params.led_ctrl_0003.grate = grate;
+    params.led_ctrl_0003.brate = brate;
+    params.led_ctrl_0003.upd_rate = col_upd_rate;
+
+    sprintf(resp, "! %d;%d;%d; %d;%d;%d; %d;", r, g,b, rrate, grate, brate, col_upd_rate);
+
+    return 0;
+}
+
 
 int led_ctrl_parse_json_msg_id_0007(const char *json_msg, char *resp)
 {
@@ -140,7 +183,7 @@ int led_ctrl_parse_json_msg_id_0007(const char *json_msg, char *resp)
     }
 
     //replace all _ with spaces
-    for(int i = 0; i < strlen(msg); i++){
+    for(int i = 0; i < strlen((const char *)msg); i++){
         if(msg[i] == '_'){
             msg[i] = ' ';
         }
@@ -211,6 +254,13 @@ int msg_parser_parse(const char *json_msg, char *resp)
         if (res == 0)
         {
             params.led_mode = 2;
+        }
+        break;
+    case 3:
+        res = led_ctrl_parse_json_msg_id_0003(json_msg, resp);
+        if (res == 0)
+        {
+            params.led_mode = 3;
         }
         break;
     case 7:

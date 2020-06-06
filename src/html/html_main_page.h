@@ -40,7 +40,11 @@ const char html_page_main[] = R"=====(
             background-color: cadetblue;
             color: crimson;
             }
-        .button003 {border-radius: 8px;}
+        .button003 {
+            border-radius: 8px;
+            background-color: darksalmon;
+            color: forestgreen;
+        }
         .button004 {border-radius: 12px;}
         .button100 {border-radius: 10%;}
         </style>
@@ -50,21 +54,23 @@ const char html_page_main[] = R"=====(
 
 <body>
 
-
     <div style="width: 100%;">
 
         <h1 style="text-align: center;">Main page</h1>
 
-
             <button class="button button001" onclick="window.location.href = 'colour_ctrl.html';"> Colour control </button>
             <p></p>
             <button class="button button002" onclick="window.location.href = 'settings.html';"> Settings </button>
+            <p></p>
+            <button class="button button003" onclick="window.location.href = 'info.html';"> Info </button>
+            <p></p>
             
     </div>
 
 </body>
 
 </html>
+
 
 
 

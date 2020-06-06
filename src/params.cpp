@@ -14,6 +14,7 @@
 #define PARAMS_START_ADR    0
 
 
+struct inst_info_ctx inst_info;
 struct parameters params;
 
 

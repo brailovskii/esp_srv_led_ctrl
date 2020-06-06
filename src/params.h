@@ -54,6 +54,13 @@ struct params_led_ctrl_0007{
     uint32_t puase_btw_msg; //pause between messages
 };
 
+
+struct inst_info_ctx{
+
+    uint8_t ap_ip[4];
+    uint8_t sta_ip[4];
+};
+
 struct parameters{
 
     char ap_ssid[32]; // Access point SSID name
@@ -77,6 +84,7 @@ struct parameters{
 
 
 extern struct parameters params;
+extern struct inst_info_ctx inst_info;
 
 void params_init(void);
 void write_gen_params(struct parameters *ctx);

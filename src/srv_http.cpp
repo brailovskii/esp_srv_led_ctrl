@@ -85,6 +85,22 @@ void handle_settings(void)
   server.send(200, "text/html", "Here will be settings"); //Send web page
 }
 
+void handle_info(void){
+
+  uint32_t heap_free;
+  uint16_t heap_max;
+  uint8_t heap_frag;
+
+  ESP.getHeapStats(&heap_free, &heap_max, &heap_frag);
+
+  String info = "STA IP: " + String(inst_info.sta_ip[0]) + "." + String(inst_info.sta_ip[1]) + "." +String(inst_info.sta_ip[2]) + "." +String(inst_info.sta_ip[3]);
+  info += "\nAP IP: "  + String(inst_info.ap_ip[0]) + "." + String(inst_info.ap_ip[1]) + "." +String(inst_info.ap_ip[2]) + "." +String(inst_info.ap_ip[3]);
+  
+  info += "\nHeap stat \n==> Free: " + String(heap_free) + " \n==>  Max: " + String(heap_max) + " \n==> Frag: " + String(heap_frag) + "\n";
+  
+  server.send(200, "text", info);
+}
+
 void handle_colour_ctrl_list(void)
 {
 
@@ -111,6 +127,8 @@ void handle_html_led_ctrl_0001(void)
 }
 void handle_html_led_ctrl_0002(void)
 {
+
+  /*
   String s = html_page_led_ctrl_0002; //Read HTML contents
 
   String rmin(params.led_ctrl_0002.rmin);
@@ -136,6 +154,9 @@ void handle_html_led_ctrl_0002(void)
   s.replace("value=\"5555\" id=\"col_upd_rate\"", "value=\"" + col_upd_rate + "\" id=\"col_upd_rate\"");
 
   server.send(200, "text/html", s); //Send web page
+*/
+
+  server.send(200, "text/html", "hdhdhsks"); //Send web page
 }
 
 void handle_html_led_ctrl_0003(void)
@@ -143,29 +164,24 @@ void handle_html_led_ctrl_0003(void)
 
   String s = html_page_led_ctrl_0003; //Read HTML contents
 
-/*
-  String rmin(params.led_ctrl_0002.rmin);
-  String rmax(params.led_ctrl_0002.rmax);
-  String gmin(params.led_ctrl_0002.gmin);
-  String gmax(params.led_ctrl_0002.gmax);
-  String bmin(params.led_ctrl_0002.bmin);
-  String bmax(params.led_ctrl_0002.bmax);
-  String rrate(params.led_ctrl_0002.rrate);
-  String grate(params.led_ctrl_0002.grate);
-  String brate(params.led_ctrl_0002.brate);
-  String col_upd_rate(params.led_ctrl_0002.col_upd_rate);
+  Serial.println("led_ctrl_0003");
 
-  s.replace("value=\"5555\" id=\"Rmin\"", "value=\"" + rmin + "\" id=\"Rmin\"");
-  s.replace("value=\"5555\" id=\"Rmax\"", "value=\"" + rmax + "\" id=\"Rmax\"");
-  s.replace("value=\"5555\" id=\"Gmin\"", "value=\"" + gmin + "\" id=\"Gmin\"");
-  s.replace("value=\"5555\" id=\"Gmax\"", "value=\"" + gmax + "\" id=\"Gmax\"");
-  s.replace("value=\"5555\" id=\"Bmin\"", "value=\"" + bmin + "\" id=\"Bmin\"");
-  s.replace("value=\"5555\" id=\"Bmax\"", "value=\"" + bmax + "\" id=\"Bmax\"");
+
+  String r(params.led_ctrl_0003.r);
+  String g(params.led_ctrl_0003.g);
+  String b(params.led_ctrl_0003.b);
+  String rrate(params.led_ctrl_0003.rrate);
+  String grate(params.led_ctrl_0003.grate);
+  String brate(params.led_ctrl_0003.brate);
+  String col_upd_rate(params.led_ctrl_0003.upd_rate);
+
+  s.replace("value=\"5555\" id=\"Rmax\"", "value=\"" + r + "\" id=\"Rmax\"");
+  s.replace("value=\"5555\" id=\"Gmax\"", "value=\"" + g + "\" id=\"Gmax\"");
+  s.replace("value=\"5555\" id=\"Bmax\"", "value=\"" + b + "\" id=\"Bmax\"");
   s.replace("value=\"5555\" id=\"Rrate\"", "value=\"" + rrate + "\" id=\"Rrate\"");
   s.replace("value=\"5555\" id=\"Grate\"", "value=\"" + grate + "\" id=\"Grate\"");
   s.replace("value=\"5555\" id=\"Brate\"", "value=\"" + brate + "\" id=\"Brate\"");
   s.replace("value=\"5555\" id=\"col_upd_rate\"", "value=\"" + col_upd_rate + "\" id=\"col_upd_rate\"");
-*/
 
   server.send(200, "text/html", s); //Send web page
 }
@@ -215,6 +231,8 @@ void handle_led_ctrl_0002(void)
 
   cnt++;
 
+Serial.println("handle_led_ctrl_0002");
+
   char response[128];
 
   String msg = server.arg("json_msg");
@@ -233,13 +251,17 @@ void handle_led_ctrl_0003(void)
 
   cnt++;
 
+  
+
   char response[128] = "0003";
 
+  
 
-/*
   String msg = server.arg("json_msg");
+
+  Serial.println("Msg: " + msg);
+
   msg_parser_parse(msg.c_str(), response);
-*/
 
   String s(response);
   String resp = String(cnt) + " " + s;
@@ -273,6 +295,7 @@ void srv_http_init(void)
 
   server.on("/colour_ctrl.html", handle_colour_ctrl_list);
   server.on("/settings.html", handle_settings);
+  server.on("/info.html", handle_info);
 
   //these html pages are responsible for showing html content
   server.on("/html_led_ctrl_0001.html", handle_html_led_ctrl_0001);
