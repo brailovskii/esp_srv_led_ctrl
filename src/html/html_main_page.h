@@ -3,7 +3,7 @@
 
 
 
-const char html_page_main[] = R"=====(
+const char html_page_main[] PROGMEM = R"=====(
 
 
 

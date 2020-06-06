@@ -4,7 +4,7 @@
 
 
 
-const char html_page_colour_ctrl_list[] = R"=====(
+const char html_page_colour_ctrl_list[] PROGMEM = R"=====(
 
 
 

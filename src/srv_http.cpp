@@ -74,7 +74,7 @@ void handleRoot()
     return;
   }
 
-  String s = html_page_main; //Read HTML contents
+  String s = FPSTR(html_page_main); //Read HTML contents
 
   server.send(200, "text/html", s); //Send web page
 }
@@ -98,13 +98,13 @@ void handle_info(void){
   
   info += "\nHeap stat \n==> Free: " + String(heap_free) + " \n==>  Max: " + String(heap_max) + " \n==> Frag: " + String(heap_frag) + "\n";
   
-  server.send(200, "text", info);
+  server.send(200, "text/plain", info);
 }
 
 void handle_colour_ctrl_list(void)
 {
 
-  String s = html_page_colour_ctrl_list;
+  String s = FPSTR(html_page_colour_ctrl_list);
 
   server.send(200, "text/html", s); //Send web page
 }
@@ -112,7 +112,7 @@ void handle_colour_ctrl_list(void)
 void handle_html_led_ctrl_0001(void)
 {
 
-  String s = html_page_led_ctrl_0001; //Read HTML contents
+  String s = FPSTR(html_page_led_ctrl_0001); //Read HTML contents
 
   String r(params.led_ctrl_0001.r);
   String g(params.led_ctrl_0001.g);
@@ -128,8 +128,7 @@ void handle_html_led_ctrl_0001(void)
 void handle_html_led_ctrl_0002(void)
 {
 
-  /*
-  String s = html_page_led_ctrl_0002; //Read HTML contents
+  String s = FPSTR(html_page_led_ctrl_0002); //Read HTML contents
 
   String rmin(params.led_ctrl_0002.rmin);
   String rmax(params.led_ctrl_0002.rmax);
@@ -154,19 +153,13 @@ void handle_html_led_ctrl_0002(void)
   s.replace("value=\"5555\" id=\"col_upd_rate\"", "value=\"" + col_upd_rate + "\" id=\"col_upd_rate\"");
 
   server.send(200, "text/html", s); //Send web page
-*/
-
-  server.send(200, "text/html", "hdhdhsks"); //Send web page
 }
 
 void handle_html_led_ctrl_0003(void)
 {
 
-  String s = html_page_led_ctrl_0003; //Read HTML contents
-
-  Serial.println("led_ctrl_0003");
-
-
+  String s = FPSTR(html_page_led_ctrl_0003); //Read HTML contents
+  
   String r(params.led_ctrl_0003.r);
   String g(params.led_ctrl_0003.g);
   String b(params.led_ctrl_0003.b);
@@ -189,7 +182,7 @@ void handle_html_led_ctrl_0003(void)
 void handle_html_led_ctrl_0007(void)
 {
 
-  String s = html_page_led_ctrl_0007; //Read HTML contents
+  String s = FPSTR(html_page_led_ctrl_0007); //Read HTML contents
 
   String rrate(params.led_ctrl_0007.r);
   String grate(params.led_ctrl_0007.g);
@@ -246,21 +239,12 @@ Serial.println("handle_led_ctrl_0002");
 
 void handle_led_ctrl_0003(void)
 {
-
   static int cnt = 0;
-
   cnt++;
-
-  
 
   char response[128] = "0003";
 
-  
-
   String msg = server.arg("json_msg");
-
-  Serial.println("Msg: " + msg);
-
   msg_parser_parse(msg.c_str(), response);
 
   String s(response);

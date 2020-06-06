@@ -4,7 +4,7 @@
 
 
 
-const char html_page_led_ctrl_0001[] = R"=====(
+const char html_page_led_ctrl_0001[] PROGMEM = R"=====(
 
 
 

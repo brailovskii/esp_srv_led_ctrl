@@ -4,12 +4,7 @@
 
 
 
-const char html_page_led_ctrl_0003[] = R"=====(
-
-
-
-
-
+const char html_page_led_ctrl_0003[] PROGMEM = R"=====(
 
 
 <!DOCTYPE html>
@@ -115,7 +110,7 @@ const char html_page_led_ctrl_0003[] = R"=====(
                             this.responseText;
                     }
                 };
-                xhttp.open("GET", "led_ctrl_0003?json_msg=" + send_str, true);
+                xhttp.open("GET", "led_ctrl_0003.html?json_msg=" + send_str, true);
                 xhttp.send();
 
             }
@@ -145,7 +140,7 @@ const char html_page_led_ctrl_0003[] = R"=====(
                     Colour change Rate
                 </td>
                 <td>
-                    <input type="range" min="0" max="200" value="5555" id="col_upd_rate" class="slider"
+                    <input type="range" min="1" max="30" value="5555" id="col_upd_rate" class="slider"
                         style="background: #5b255d;" onchange="slider_update_control(0)">
                 </td>
             </tr>
@@ -286,8 +281,6 @@ const char html_page_led_ctrl_0003[] = R"=====(
 </body>
 
 </html>
-
-
 
 
 
