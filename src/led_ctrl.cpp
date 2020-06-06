@@ -1,6 +1,7 @@
 #include "led_ctrl.h"
 #include "params.h"
 #include <FastLED.h>
+#include <math.h>
 
 typedef enum
 {
@@ -69,6 +70,17 @@ void led_ctrl_proces(void)
   }
 }
 
+
+float led_apply_log_correct(float val){
+
+  float alpha = 105.1;
+
+  return alpha * log10(val);
+
+}
+
+//#define LED_CTRL_EN_LOG_BRIGHTNESS_CORRECTION
+
 void led_ctrl_update(void)
 {
 
@@ -78,8 +90,16 @@ void led_ctrl_update(void)
     r = LED_FACTORY_BRIGHTNESS_COEF * leds_buf[0][i];
     g = LED_FACTORY_BRIGHTNESS_COEF * leds_buf[1][i];
     b = LED_FACTORY_BRIGHTNESS_COEF * leds_buf[2][i];
+
+#ifdef LED_CTRL_EN_LOG_BRIGHTNESS_CORRECTION
+    r = led_apply_log_correct(r);
+    g = led_apply_log_correct(g);
+    b = led_apply_log_correct(b);
+#endif
+
     leds[i] = CRGB((int)r, (int)g, (int)b);
   }
+
 
   FastLED.show();
 }
