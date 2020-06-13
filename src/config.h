@@ -9,7 +9,7 @@
 
 #define LED_PIN     1 //this led pin is pin on nodemcu board. WS2812b leds are connected via 220R series resistor
 
-#define LED_FACTORY_BRIGHTNESS_COEF 0.8
+#define LED_FACTORY_BRIGHTNESS_COEF 0.7
 
 
 #define DEFAULT_AP_SSID "shine_bright"
